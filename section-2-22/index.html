@@ -1,0 +1,37 @@
+<!DOCTYPE >
+<html>
+  <head>
+    <title>VueJS Course</title>
+    <link rel="stylesheet" type="text/css" href="main.css" />
+  </head>
+
+  <body>
+    <div id="app">
+      <ul>
+        <li v-cloak v-for="(bird, index) in birds" :key="bird" :class="bird">
+          {{ bird }}
+        </li>
+      </ul>
+
+      <hr />
+
+      <ul>
+        <!-- Looping through an array -->
+        <li
+          v-cloak
+          v-for="(person, index) in people"
+          :key="person.name"
+          :class="person"
+        >
+          <!-- Looping through an object -->
+          <div v-for="(value, key, index) in person">
+            {{ key }} - {{ value }} - index {{ index }}
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
