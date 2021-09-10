@@ -1,9 +1,14 @@
 const vm = Vue.createApp({
+  // Define template in options
+  // template: `{{ message }}`,
+
   data() {
     return {
       message: "Hello world!",
     };
   },
+
+  // Lifecycle hooks
   beforeCreate() {
     console.log("beforeCreate() lifecycle called", this.message, this.$el);
   },
@@ -39,3 +44,17 @@ vm.mount("#app");
 // setTimeout(() => {
 //   vm.mount("#app");
 // }, 3000);
+
+// const vm2 = Vue.createApp({
+//   data() {
+//     return {
+//       message: "Hello world!",
+//     };
+//   },
+
+//   // if render() is specified, create object manually without the compiler
+//   render() {
+//     // h() stands for hyperscript - create html with javascript
+//     return Vue.h("h1", this.message);
+//   },
+// }).mount("#app2");
