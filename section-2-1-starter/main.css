@@ -6,3 +6,8 @@ input[type="text"] {
   margin: 10px 0;
   display: block;
 }
+
+/* Hide un-compiled mustache bindings until the component instance is ready */
+[v-cloak] {
+  display: none;
+}

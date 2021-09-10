@@ -5,8 +5,53 @@
     <link rel="stylesheet" type="text/css" href="main.css" />
   </head>
   <body>
-    <div id="app"></div>
+    <div id="app" v-cloak>
+      <p>{{ fullName }}</p>
+      <p><a :href="url" target="_blank">Google</a></p>
+      <p v-html="rawUrl"></p>
+      <p>{{ age }}</p>
 
+      <hr />
+
+      <label for="first-name">First Name</label>
+      <input v-model.lazy.trim="firstName" id="first-name" type="text" />
+
+      <label for="middle-name">Middle Name</label>
+      <input
+        @keyup.enter="handleUpdateMiddleName"
+        id="middle-name"
+        type="text"
+      />
+
+      <label for="last-name">Last Name</label>
+      <!-- <input v-model="lastName" id="last-name" type="text" /> -->
+
+      <!-- Vue assigns the event as $event -->
+      <input
+        :value="lastName"
+        @input.prevent="handleUpdateLastName('Last name event triggered!', $event)"
+        id="last-name"
+        type="text"
+      />
+
+      <label for="age">Age</label>
+
+      <!-- v-model modifiers -->
+      <input v-model.number="age" id="age" type="number" />
+
+      <button @click="handleIncreaseAge">Increase Age</button>
+
+      <!-- System modifier key -->
+      <!-- <button @click.shift="age--">Decrease Age</button> -->
+      <button @click="age--">Decrease Age</button>
+    </div>
+
+    <!-- Multiple instances on a page -->
+    <!-- <div id="app2">
+      <span>{{ firstName }} {{ lastName }}</span>
+    </div> -->
+
+    <!-- Load Vue from CDN -->
     <script src="https://unpkg.com/vue@next"></script>
     <script src="app.js"></script>
   </body>
