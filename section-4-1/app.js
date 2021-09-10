@@ -2,11 +2,11 @@ const vm = Vue.createApp({
   // Define template in options
   // template: `{{ message }}`,
 
-  data() {
-    return {
-      message: "Hello world!",
-    };
-  },
+  // data() {
+  //   return {
+  //     message: "Hello world!",
+  //   };
+  // },
 
   // Lifecycle hooks
   beforeCreate() {
@@ -36,6 +36,16 @@ const vm = Vue.createApp({
   },
   unmounted() {
     console.log("unmounted() lifecycle called");
+  },
+});
+
+// Available after vm instance is created
+vm.component("hello", {
+  template: `<h1>{{ message }}</h1>`,
+  data() {
+    return {
+      message: "Hello, World!",
+    };
   },
 });
 
