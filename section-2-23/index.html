@@ -1,0 +1,23 @@
+<!DOCTYPE >
+<html>
+  <head>
+    <title>VueJS Course</title>
+    <link rel="stylesheet" type="text/css" href="main.css" />
+  </head>
+
+  <body>
+    <div id="app" v-cloak>
+      <button type="button" class="move" @click="handleMove">
+        Move to Bottom
+      </button>
+      <div v-for="person in people" class="card" :key="person">
+        <h3>{{ person.name }}</h3>
+        <p>{{ person.message }}</p>
+        <input type="text" />
+      </div>
+    </div>
+
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
