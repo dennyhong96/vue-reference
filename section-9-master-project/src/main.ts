@@ -1,5 +1,7 @@
 import { createApp } from "vue";
 
+import "@/assets/tailwind.css";
+import "@/assets/main.css";
 import "@/registerServiceWorker";
 import App from "@/App.vue";
 import router from "@/router";
