@@ -4,6 +4,7 @@ import {
   Field as VeeField,
   ErrorMessage,
   defineRule,
+  configure,
 } from "vee-validate";
 import {
   required,
@@ -26,7 +27,9 @@ export default {
     app.component("VeeField", VeeField);
     app.component("ErrorMessage", ErrorMessage);
 
-    // Register rules to use
+    // Register rules to
+
+    // Generic rules
     defineRule("required", required);
     defineRule("min", min);
     defineRule("max", max);
@@ -34,7 +37,45 @@ export default {
     defineRule("email", email);
     defineRule("min_value", minValue);
     defineRule("max_value", maxValue);
-    defineRule("confirmed", confirmed); // Checks if value in current input matches another input
     defineRule("excluded", excluded); // Checks if value in current input matches another input
+
+    // Specific rules, for configuring more descriptive error message
+    defineRule("tos", required);
+    defineRule("passwords_mismatch", confirmed); // Checks if value in current input matches another input
+    defineRule("country_excluded", excluded); // A rule specifically for country, so we can give more descriptive error message
+
+    // Configure the default behavior
+    configure({
+      generateMessage(ctx) {
+        // console.log({ ctx });
+
+        const messages = {
+          required: `The field ${ctx.field} is required.`,
+          min: `The field ${ctx.field} is too short.`,
+          max: `The field ${ctx.field} is too long.`,
+          alpha_spaces: `The field ${ctx.field} can only contain alphabetic characters and spaces.`,
+          email: `The field ${ctx.field} must be a valid email.`,
+          min_value: `The field ${ctx.field} is too low.`,
+          max_value: `The field ${ctx.field} is too high.`,
+          excluded: `You are not allowed to use this value for ${ctx.field}.`,
+          country_excluded: `Due to restrictions, we do not accept users from this location.`,
+          passwords_mismatch: `The passwords don't match.`,
+          tos: `You must accept the terms of service.`,
+        };
+
+        let message = `The field ${ctx.field} is invalid.`;
+        if (ctx.rule?.name && ctx.rule.name in messages) {
+          message = messages[ctx.rule.name as keyof typeof messages];
+        }
+
+        return message;
+      },
+
+      // Validation triggers
+      validateOnBlur: true,
+      validateOnChange: true,
+      validateOnInput: false, // Validate on every key stroke
+      validateOnModelUpdate: true, // Validate on v-model value change
+    });
   },
 };
