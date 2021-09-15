@@ -5,6 +5,7 @@ declare module "@vue/runtime-core" {
   // Declare your own store states.
   interface State {
     authModalShow: boolean;
+    userLoggedIn: boolean;
   }
 
   interface ComponentCustomProperties {

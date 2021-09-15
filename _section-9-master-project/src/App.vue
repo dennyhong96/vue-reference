@@ -316,5 +316,9 @@ export default defineComponent({
     AppHeader,
     AuthModal,
   },
+
+  created() {
+    this.$store.dispatch("initLogin");
+  },
 });
 </script>

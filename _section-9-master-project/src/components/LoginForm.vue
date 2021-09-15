@@ -1,7 +1,7 @@
 <template>
   <!-- Login alert -->
   <div
-    v-if="loginInProgress"
+    v-if="loginShowAlert"
     class="text-white text-center font-bold p-5 mb-4"
     :class="loginAlertVariant"
   >
@@ -46,12 +46,9 @@
 </template>
 
 <script lang="ts">
+import { LoginFormFields } from "@/store";
 import { defineComponent } from "vue";
-
-type LoginFormFields = {
-  name: string;
-  email: string;
-};
+import { mapMutations } from "vuex";
 
 export default defineComponent({
   name: "LoginForm",
@@ -73,16 +70,30 @@ export default defineComponent({
   computed: {},
 
   methods: {
-    login(values: LoginFormFields) {
+    ...mapMutations(["toggleAuthModal"]),
+
+    async login(values: LoginFormFields) {
       console.log({ values });
 
       this.loginInProgress = true;
       this.loginShowAlert = true;
       this.loginAlertVariant = "bg-blue-500";
 
-      // ...
-      this.loginAlertVariant = "bg-green-500";
-      this.loginAlertMessage = "Successs! Your are not logged in.";
+      try {
+        await this.$store.dispatch("login", values);
+
+        this.loginAlertVariant = "bg-green-500";
+        this.loginAlertMessage = "Successs! Your are not logged in.";
+
+        window.location.reload();
+        // this.toggleAuthModal();
+      } catch (error) {
+        this.loginInProgress = false;
+        this.loginAlertVariant = "bg-red-500";
+        this.loginAlertMessage =
+          error.message ??
+          "An unexpeced error occured. Please try again later.";
+      }
     },
   },
 });

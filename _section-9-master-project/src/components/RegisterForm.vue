@@ -1,7 +1,7 @@
 <template>
   <!-- Register alret -->
   <div
-    v-if="registerInProgress"
+    v-if="registerShowAlert"
     class="text-white text-center font-bold p-5 mb-4"
     :class="registerAlertVariant"
   >
@@ -97,6 +97,18 @@
       </VeeField>
       <ErrorMessage class="text-red-600" name="country" />
     </div>
+    <div class="mb-3">
+      <label class="inline-block mb-2">Role</label>
+      <VeeField
+        as="select"
+        name="role"
+        class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
+                  duration-500 focus:outline-none focus:border-black rounded"
+      >
+        <option value="Listener">Listener</option>
+        <option value="Artist">Artist</option>
+      </VeeField>
+    </div>
     <!-- TOS -->
     <div class="mb-3 pl-6">
       <!-- Be default VeeField has undefined as value, must specify value="1" otherwise the rules will be broken -->
@@ -123,15 +135,8 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-interface RegisterFormFields {
-  name: string;
-  email: string;
-  age: string;
-  password: string;
-  confirm_password: string;
-  country: string;
-  tos: string;
-}
+import { RegisterFormFields } from "@/store";
+import { mapMutations } from "vuex";
 
 export default defineComponent({
   name: "AuthModal",
@@ -141,6 +146,7 @@ export default defineComponent({
       // Initial values for the form
       defaultFormData: {
         country: "USA",
+        role: "Listener",
       },
 
       // Validation schema specify the rules to use for fields
@@ -151,6 +157,7 @@ export default defineComponent({
         password: "required|min:3|max:32",
         confirm_password: "passwords_mismatch:@password", // Make sure value in confirm_password matches password
         country: "required|country_excluded:Antarctica",
+        role: "required",
         tos: "tos", // Must agree to terms and confition, must check the checkbox
       },
 
@@ -164,16 +171,30 @@ export default defineComponent({
   computed: {},
 
   methods: {
-    register(values: RegisterFormFields) {
+    ...mapMutations(["toggleAuthModal"]),
+
+    async register(values: RegisterFormFields) {
       console.log({ values });
       this.registerInProgress = true;
       this.registerShowAlert = true;
       this.registerAlertVariant = "bg-blue-500";
       this.registerAlertMessage = "Please wait! Your account is being created.";
 
-      // ...
-      this.registerAlertVariant = "bg-green-500";
-      this.registerAlertMessage = "Successs! Your account has been created.";
+      try {
+        await this.$store.dispatch("register", values);
+
+        this.registerAlertVariant = "bg-green-500";
+        this.registerAlertMessage = "Successs! Your account has been created.";
+
+        window.location.reload();
+        // this.toggleAuthModal();
+      } catch (error) {
+        this.registerInProgress = false;
+        this.registerAlertVariant = "bg-red-500";
+        this.registerAlertMessage =
+          error.message ??
+          "An unexpeced error occured. Please try again later.";
+      }
     },
   },
 });
