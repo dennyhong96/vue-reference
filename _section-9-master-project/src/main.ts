@@ -12,6 +12,7 @@ import "@/registerServiceWorker";
 let app: TApp<Element>;
 
 auth.onAuthStateChanged(() => {
+  // Load the vue app after auth state change, so we could grab auth.currentUser to check for if a user is logged in
   console.log("onAuthStateChanged");
 
   if (app) return;

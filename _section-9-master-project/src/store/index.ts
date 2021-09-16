@@ -1,4 +1,5 @@
 import { auth, usersCollection } from "@/includes/firebase";
+import { useRoute, useRouter } from "vue-router";
 import { createStore } from "vuex";
 
 export interface RegisterFormFields {
