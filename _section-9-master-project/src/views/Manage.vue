@@ -3,7 +3,7 @@
   <section class="container mx-auto mt-6">
     <div class="md:grid md:grid-cols-3 md:gap-4">
       <div class="col-span-1">
-        <Upload />
+        <Upload ref="uploadComponentRef" />
       </div>
       <div class="col-span-2">
         <div
@@ -145,6 +145,17 @@ export default defineComponent({
   components: {
     Upload,
   },
+
+  // Use beforeRouteLeave() route guard to unsubscribe/cancel long living tasks
+  // beforeRouteLeave(to, from, next) {
+  //   // Cancel unfinished files uploads before navigating away from the route
+  //   // Use a ref for <Upload /> component instance and access the component's cancelUploads() method
+  //   (this.$refs.uploadComponentRef as {
+  //     cancelUploads: () => void;
+  //   }).cancelUploads();
+
+  //   next();
+  // },
 
   // Local route guard, ran before rendering component
   // beforeRouteEnter(to, from, next) {

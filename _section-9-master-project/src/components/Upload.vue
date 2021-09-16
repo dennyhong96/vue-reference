@@ -21,6 +21,8 @@
       >
         <h5>Drop your files here</h5>
       </div>
+
+      <input type="file" multiple @change="handleUpload" />
       <hr class="my-6" />
 
       <!-- Progess Bars -->
@@ -68,13 +70,31 @@ export default defineComponent({
     };
   },
 
+  beforeUnmount() {
+    // Cancel files upload operations before component unmount
+    this.cancelUploads();
+  },
+
   methods: {
-    async handleUpload(evt: DragEvent) {
+    cancelUploads() {
+      this.uploads.forEach((upload) => upload.task.cancel());
+    },
+
+    async handleUpload(evt: DragEvent | Event) {
       this.isDraggedOver = false;
 
-      if (!evt.dataTransfer?.files) return;
+      let files: File[] | undefined;
+      if ("dataTransfer" in evt) {
+        // Files are uploaded via dropzone
+        if (!evt.dataTransfer?.files) return;
+        files = [...evt.dataTransfer.files];
+      } else {
+        // Files are uploaded via files input
+        const target = evt.target as HTMLInputElement | null;
+        if (!target?.files) return;
+        files = [...target.files];
+      }
 
-      let files = [...evt.dataTransfer.files];
       files.forEach((file) => {
         if (file.type !== "audio/mpeg") return;
 
