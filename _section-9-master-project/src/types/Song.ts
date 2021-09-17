@@ -7,3 +7,7 @@ export interface Song {
   commentCount: number;
   url: string;
 }
+
+export interface SongWithId extends Song {
+  id: string;
+}

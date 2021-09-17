@@ -46,9 +46,9 @@
 
 <script lang="ts">
 import firebase, { auth, songsCollection, storage } from "@/includes/firebase";
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 
-import { Song } from "@/types/Song";
+import { Song, SongWithId } from "@/types/Song";
 
 export interface Upload {
   songId: string;
@@ -68,6 +68,13 @@ export default defineComponent({
       isDraggedOver: false,
       uploads: [] as Upload[],
     };
+  },
+
+  props: {
+    handleCreateLocalSong: {
+      required: true,
+      type: Function as PropType<(newSong: SongWithId) => void>,
+    },
   },
 
   beforeUnmount() {
@@ -98,6 +105,7 @@ export default defineComponent({
       files.forEach((file) => {
         if (file.type !== "audio/mpeg") return;
 
+        // Upload song file to storage
         const storageRef = storage.ref(); // root
         const songRef = storageRef.child(`songs/${file.name}`); // songs directory under root
         const uploadTask = songRef.put(file);
@@ -152,16 +160,22 @@ export default defineComponent({
               url: (await uploadTask.snapshot.ref.getDownloadURL()) as string,
             };
 
+            // Add new song data to DB
             await songsCollection.doc(songId).set(song);
+
+            // Add new song to local data
+            this.handleCreateLocalSong({ id: songId, ...song });
 
             if (!upload) return;
             upload.variant = "bg-green-400";
             upload.icon = "fas fa-check";
             upload.textClass = "text-green-400";
 
-            // this.uploads = this.uploads.filter(
-            //   (upload) => upload.songId !== songId
-            // );
+            setTimeout(() => {
+              this.uploads = this.uploads.filter(
+                (upload) => upload.songId !== songId
+              );
+            }, 3000);
           }
         );
       });
