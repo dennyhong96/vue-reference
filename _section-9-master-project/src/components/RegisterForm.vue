@@ -174,7 +174,6 @@ export default defineComponent({
     ...mapMutations(["toggleAuthModal"]),
 
     async register(values: RegisterFormFields) {
-      console.log({ values });
       this.registerInProgress = true;
       this.registerShowAlert = true;
       this.registerAlertVariant = "bg-blue-500";

@@ -39,7 +39,7 @@ import { defineComponent } from "vue";
 
 import Upload from "@/components/Upload.vue";
 import CompositionItem from "@/components/CompositionItem.vue";
-import { auth, songsCollection, storage } from "@/includes/firebase";
+import { auth, songsCollection } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
 // import store from "@/store";
 

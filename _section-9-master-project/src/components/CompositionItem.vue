@@ -129,7 +129,6 @@ export default defineComponent({
 
   methods: {
     async handleUpdateSong(values: SongForm) {
-      console.log({ values });
       this.isUpdating = true;
       this.showAlert = true;
       this.alertVariant = "bg-blue-500";

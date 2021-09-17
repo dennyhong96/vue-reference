@@ -73,8 +73,6 @@ export default defineComponent({
     ...mapMutations(["toggleAuthModal"]),
 
     async login(values: LoginFormFields) {
-      console.log({ values });
-
       this.loginInProgress = true;
       this.loginShowAlert = true;
       this.loginAlertVariant = "bg-blue-500";

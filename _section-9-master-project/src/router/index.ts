@@ -4,6 +4,7 @@ import store from "@/store";
 import Home from "@/views/Home.vue";
 import About from "@/views/About.vue";
 import Manage from "@/views/Manage.vue";
+import Song from "@/views/Song.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -35,6 +36,11 @@ const routes: Array<RouteRecordRaw> = [
     redirect: {
       name: "Manage", // Redirect from /manage (old path) to /manage-music (new path)
     },
+  },
+  {
+    path: "/songs/:id",
+    name: "Song",
+    component: Song,
   },
   {
     path: "/:catchAll(.*)*", // Vue router try to match the catch-all route last, prioritize other matches

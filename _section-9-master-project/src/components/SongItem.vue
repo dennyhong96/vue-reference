@@ -4,9 +4,11 @@
           duration-300 hover:bg-gray-50"
   >
     <div>
-      <a href="#" class="font-bold block text-gray-600">{{
-        song.modifiedName
-      }}</a>
+      <router-link
+        :to="{ name: 'Song', params: { id: song.id } }"
+        class="font-bold block text-gray-600"
+        >{{ song.modifiedName }}</router-link
+      >
       <span class="text-gray-500 text-sm">Artist Name</span>
     </div>
 
