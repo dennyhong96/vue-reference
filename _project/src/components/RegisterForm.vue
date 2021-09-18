@@ -118,7 +118,12 @@
         type="checkbox"
         class="w-4 h-4 float-left -ml-6 mt-1 rounded"
       />
-      <label class="inline-block">Accept terms of service</label>
+
+      <!-- Component interpolation - insert HTML into a translation -->
+      <!-- The wrapped HTML content replaces the {0} in locale files -->
+      <i18n-t keypath="register.accept" tag="label" class="inline-block">
+        <a href="/">{{ $t("register.TOS") }}</a>
+      </i18n-t>
       <ErrorMessage class="text-red-600 block" name="tos" />
     </div>
     <button

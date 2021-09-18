@@ -1,5 +1,15 @@
 {
   "home": {
     "listen": "Listen to Great Music!"
+  },
+  "song": {
+    "commentCount": "No comments | 1 Comment | {count} Comments"
+  },
+  "register": {
+    "accept": "I accept Music's {0}",
+    "TOS": "Terms of Service"
+  },
+  "manage": {
+    "mySongs": "My songs"
   }
 }

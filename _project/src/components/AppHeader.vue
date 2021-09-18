@@ -38,6 +38,19 @@
             </li>
           </template>
         </ul>
+
+        <div class="ml-auto">
+          <select
+            class="py-1 px-2 text-gray-800 border border-gray-300 transition
+                  duration-500 focus:outline-none focus:border-black rounded"
+            :value="currentLocale"
+            @change="handleChangeLocale"
+          >
+            <option value="en">🇺🇸 English</option>
+            <option value="fr">🇹🇫 French</option>
+            <option value="zh">🇨🇳 Chinese</option>
+          </select>
+        </div>
       </div>
     </nav>
   </header>
@@ -49,12 +62,23 @@ import { mapMutations, mapState } from "vuex";
 
 export default defineComponent({
   name: "AppHeader",
+
+  data() {
+    return {
+      currentLocale: this.$i18n.locale as "en" | "zh" | "fr",
+    };
+  },
+
   computed: {
     ...mapState(["userLoggedIn"]),
   },
 
   methods: {
     ...mapMutations(["toggleAuthModal"]),
+
+    handleChangeLocale(evt: Event) {
+      this.$i18n.locale = (evt.target as HTMLSelectElement).value;
+    },
 
     signOut() {
       this.$store.dispatch("signOut");

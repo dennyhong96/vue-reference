@@ -32,4 +32,27 @@ export default createI18n({
   locale: process.env.VUE_APP_I18N_LOCALE || "en",
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || "en",
   messages: loadLocaleMessages(),
+
+  // Numeric translations require a differnt structure, can't reside in .json files
+  // Can outsource this to another file
+  numberFormats: {
+    en: {
+      currency: {
+        style: "currency",
+        currency: "USD",
+      },
+    },
+    fr: {
+      currency: {
+        style: "currency",
+        currency: "EUR",
+      },
+    },
+    zh: {
+      currency: {
+        style: "currency",
+        currency: "RMB",
+      },
+    },
+  },
 });

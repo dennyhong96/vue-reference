@@ -25,6 +25,8 @@
           <!-- Song Info -->
           <div class="text-3xl font-bold">{{ song?.modifiedName }}</div>
           <div>{{ song?.genre || "Unknown genre" }}</div>
+          <!-- $n() translate numeric values -->
+          <!-- <div class="song-price">{{ $n(1, "currency", "zh") }}</div> -->
         </div>
       </div>
     </section>
@@ -35,8 +37,13 @@
         class="bg-white rounded border border-gray-200 relative flex flex-col"
       >
         <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
-          <!-- Comment Count -->
-          <span class="card-title">Comments ({{ song?.commentCount }})</span>
+          <!-- Comment Count, $tc() supports pluralization -->
+          <span class="card-title"
+            >{{ $tc("song.commentCount", song?.commentCount ?? 0) }}
+          </span>
+          <!-- <span class="card-title"
+            >{{ $t("song.commentCount", { count: song?.commentCount }) }}
+          </span> -->
           <i class="fa fa-comments float-right text-green-400 text-2xl"></i>
         </div>
         <div class="p-6">

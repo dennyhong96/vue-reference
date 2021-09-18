@@ -1,5 +1,15 @@
 {
   "home": {
     "listen": "聆听美妙的音乐！"
+  },
+  "song": {
+    "commentCount": "暂无评论 | 1条评论 | {count}条评论"
+  },
+  "register": {
+    "accept": "我接受 Music 的{0}",
+    "TOS": "附带条约"
+  },
+  "manage": {
+    "mySongs": "我的音乐"
   }
 }
