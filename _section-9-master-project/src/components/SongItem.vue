@@ -9,7 +9,7 @@
         class="font-bold block text-gray-600"
         >{{ song.modifiedName }}</router-link
       >
-      <span class="text-gray-500 text-sm">Artist Name</span>
+      <span class="text-gray-500 text-sm">{{ song.displayName }}</span>
     </div>
 
     <div class="text-gray-600 text-lg">

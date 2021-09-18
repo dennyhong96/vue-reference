@@ -43,7 +43,7 @@
 import { defineComponent } from "vue";
 
 import SongItem from "@/components/SongItem.vue";
-import firebase, { songsCollection } from "@/includes/firebase";
+import { songsCollection } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
 
 export default defineComponent({

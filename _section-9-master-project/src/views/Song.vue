@@ -8,11 +8,17 @@
     <div class="container mx-auto flex items-center">
       <!-- Play/Pause Button -->
       <button
+        @click.prevent="!isSongPlaying ? playNewSong(song) : toggleAudio()"
         type="button"
         class="z-50 h-24 w-24 text-3xl bg-white text-black rounded-full
         focus:outline-none"
       >
-        <i class="fas fa-play"></i>
+        <i
+          :class="{
+            'fas fa-play': !isSongPlaying,
+            'fas fa-pause': isSongPlaying,
+          }"
+        ></i>
       </button>
       <div class="z-50 text-left ml-8">
         <!-- Song Info -->
@@ -90,61 +96,12 @@
       </p>
     </li>
   </ul>
-
-  <!-- Player -->
-  <div
-    class="fixed bottom-0 left-0 bg-white p-5 pb-4 text-left align-top w-full h-16"
-  >
-    <div class="relative">
-      <!-- Play/Pause Button -->
-      <div class="float-left w-7 h-7 leading-3">
-        <button type="button">
-          <i class="fa fa-play text-gray-500 text-xl"></i>
-        </button>
-      </div>
-      <!-- Current Position -->
-      <div
-        class="float-left w-7 h-7 leading-3 text-gray-400 mt-0 text-lg w-14 ml-5 mt-1"
-      >
-        <span class="player-currenttime">00:00</span>
-      </div>
-      <!-- Scrub -->
-      <div class="float-left w-7 h-7 leading-3 ml-7 mt-2 player-scrub">
-        <div
-          class="absolute left-0 right-0 text-lg text-center mx-auto player-song-info"
-        >
-          <span class="song-title">Song Title</span> by
-          <span class="song-artist">Artist</span>
-        </div>
-        <span
-          class="block w-full h-2 rounded m-1 mt-2 bg-gray-200 relative cursor-pointer"
-        >
-          <span
-            class="absolute top-neg-8 text-gray-800	text-lg"
-            style="left: 50%;"
-          >
-            <i class="fas fa-circle"></i>
-          </span>
-          <span
-            class="block h-2 rounded bg-gradient-to-r from-green-500 to-green-400"
-            style="width: 50%;"
-          ></span>
-        </span>
-      </div>
-      <!-- Duration -->
-      <div
-        class="float-left w-7 h-7 leading-3 text-gray-400 mt-0 text-lg w-14 ml-8 mt-1"
-      >
-        <span class="player-duration">03:06</span>
-      </div>
-    </div>
-  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import { FormContext } from "vee-validate";
-import { mapState } from "vuex";
+import { mapActions, mapGetters, mapState } from "vuex";
 
 import {
   auth,
@@ -189,13 +146,16 @@ export default defineComponent({
 
   computed: {
     ...mapState(["userLoggedIn"]),
+    ...mapGetters(["isSongPlaying"]),
 
-    sortedComments() {
+    sortedComments(): CommentWithId[] {
       return this.comments.slice().sort((a, b) => {
         if (this.sort === "DESC") {
-          return new Date(b.datePosted) - new Date(a.datePosted);
+          return (
+            Number(new Date(b.datePosted)) - Number(new Date(a.datePosted))
+          );
         }
-        return new Date(a.datePosted) - new Date(b.datePosted);
+        return Number(new Date(a.datePosted)) - Number(new Date(b.datePosted));
       });
     },
   },
@@ -216,6 +176,8 @@ export default defineComponent({
   },
 
   methods: {
+    ...mapActions(["playNewSong", "toggleAudio"]),
+
     async listComments() {
       const snapshots = await commentsCollections
         .where("sid", "==", this.$route.params.id as string)
