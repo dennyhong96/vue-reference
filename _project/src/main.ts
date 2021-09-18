@@ -3,6 +3,7 @@ import { createApp, App as TApp } from "vue";
 import App from "@/App.vue";
 import router from "@/router";
 import store from "@/store";
+import i18n from "@/includes/i18n";
 import VeeValidatePlugin from "@/includes/validation";
 import { auth } from "@/includes/firebase";
 import iconDirective from "@/directives/icon";
@@ -25,6 +26,7 @@ auth.onAuthStateChanged(() => {
   app.use(store);
   app.use(router);
   app.use(VeeValidatePlugin, { foo: 5 });
+  app.use(i18n);
 
   // Directives
   app.directive("icon", iconDirective);
