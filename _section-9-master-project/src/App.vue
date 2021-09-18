@@ -1,6 +1,12 @@
 <template>
   <AppHeader />
-  <router-view></router-view>
+
+  <router-view v-slot="{ Component }">
+    <transition name="fade" mode="out-in">
+      <component :is="Component"></component>
+    </transition>
+  </router-view>
+
   <Player />
   <AuthModal />
 </template>
@@ -26,3 +32,18 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  transition: 0.2s ease-in;
+}
+
+.fade-leave-active {
+  transition: 0.25s ease-out;
+}
+</style>
