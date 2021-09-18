@@ -29,11 +29,11 @@
       <div
         class="bg-white rounded border border-gray-200 relative flex flex-col"
       >
-        <div class="px-6 pt-6 pb-5 font-bold border-b border-gray-200">
+        <div
+          v-icon-secondary="{ icon: 'headphones-alt', right: true }"
+          class="px-6 pt-6 pb-5 font-bold border-b border-gray-200"
+        >
           <span class="card-title">Songs</span>
-          <i
-            class="fa fa-headphones-alt float-right text-green-400 text-xl"
-          ></i>
         </div>
 
         <!-- Playlist -->
@@ -51,6 +51,7 @@ import { defineComponent } from "vue";
 import SongItem from "@/components/SongItem.vue";
 import { songsCollection } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
+import iconSecondary from "@/directives/iconSecondary";
 
 export default defineComponent({
   name: "Home",
@@ -108,6 +109,11 @@ export default defineComponent({
 
   beforeUnmount() {
     window.removeEventListener("scroll", this.handleScroll);
+  },
+
+  // Register directives locally
+  directives: {
+    "icon-secondary": iconSecondary,
   },
 });
 </script>

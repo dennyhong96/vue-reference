@@ -5,6 +5,7 @@ import router from "@/router";
 import store from "@/store";
 import VeeValidatePlugin from "@/includes/validation";
 import { auth } from "@/includes/firebase";
+import iconDirective from "@/directives/icon";
 import "@/assets/tailwind.css";
 import "@/assets/main.css";
 import "@/registerServiceWorker";
@@ -24,6 +25,9 @@ auth.onAuthStateChanged(() => {
   app.use(store);
   app.use(router);
   app.use(VeeValidatePlugin, { foo: 5 });
+
+  // Directives
+  app.directive("icon", iconDirective);
 
   app.mount("#app");
 });
