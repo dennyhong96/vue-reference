@@ -6,11 +6,16 @@ import store from "@/store";
 import i18n from "@/includes/i18n";
 import VeeValidatePlugin from "@/includes/validation";
 import globalComponentsPlugin from "@/includes/_globals";
+import progressBar from "@/includes/progressBar";
 import { auth } from "@/includes/firebase";
 import iconDirective from "@/directives/icon";
 import "@/assets/tailwind.css";
 import "@/assets/main.css";
+import "nprogress/nprogress.css";
 import "@/registerServiceWorker";
+
+// route change progress bar
+progressBar(router);
 
 let app: TApp<Element>;
 

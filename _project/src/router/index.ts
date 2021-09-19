@@ -1,10 +1,18 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import store from "@/store";
-import Home from "@/views/Home.vue";
-import About from "@/views/About.vue";
-import Manage from "@/views/Manage.vue";
-import Song from "@/views/Song.vue";
+
+// route level code-splitting
+// this generates a separate chunk (home.[hash].js) for this route
+// which is lazy-loaded when the route is visited.
+const Home = () => import(/* webpackChunkName: "home" */ "@/views/Home.vue");
+const About = () => import(/* webpackChunkName: "about" */ "@/views/About.vue");
+
+// Grouping frequently viewed together routes as a single chunk - assign the same chunk name
+const Manage = () =>
+  import(/* webpackChunkName: "groupedChunk" */ "@/views/Manage.vue");
+const Song = () =>
+  import(/* webpackChunkName: "groupedChunk" */ "@/views/Song.vue");
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -48,16 +56,6 @@ const routes: Array<RouteRecordRaw> = [
       name: "Home", // Redirect to /home if 404
     },
   },
-
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue"),
-  // },
 ];
 
 const router = createRouter({
