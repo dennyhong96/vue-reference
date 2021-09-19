@@ -146,6 +146,40 @@ export default defineComponent({
     };
   },
 
+  async created() {
+    const songDoc = await songsCollection
+      .doc(this.$route.params.id as string)
+      .get();
+
+    // Firebase doesn't throw error if doc is deleted
+    if (!songDoc.exists) return this.$router.push({ name: "Home" });
+
+    this.song = { id: songDoc.id, ...(songDoc.data() as Song) };
+
+    this.sort = (this.$route.query.sort as Sort | undefined) ?? "DESC";
+
+    this.listComments();
+  },
+
+  // Replace `created` lifecycle method with `beforeRouteEnter` route guard if we want to have all the data available when the page loads
+  // async beforeRouteEnter(to, from, next) {
+  //   const songDoc = await songsCollection.doc(to.params.id as string).get();
+
+  //   next((vm) => {
+  //     // The callback is run after the component has loaded after route change
+  //     // vm argument is the context of the component, same to `this`
+
+  //     // Firebase doesn't throw error if doc is deleted
+  //     if (!songDoc.exists) return vm.$router.push({ name: "Home" });
+
+  //     vm.song = { id: songDoc.id, ...(songDoc.data() as Song) };
+
+  //     vm.sort = (vm.$route.query.sort as Sort | undefined) ?? "DESC";
+
+  //     vm.listComments();
+  //   });
+  // },
+
   watch: {
     sort(newValue: Sort) {
       if (newValue === this.$route.query.sort) return;
@@ -161,7 +195,7 @@ export default defineComponent({
       userLoggedIn: (state) => (state as State).auth.userLoggedIn,
     }),
 
-    ...mapGetters(["player", "isSongPlaying"]),
+    ...mapGetters("player", ["isSongPlaying"]),
 
     sortedComments(): CommentWithId[] {
       return this.comments.slice().sort((a, b) => {
@@ -173,21 +207,6 @@ export default defineComponent({
         return Number(new Date(a.datePosted)) - Number(new Date(b.datePosted));
       });
     },
-  },
-
-  async created() {
-    const songDoc = await songsCollection
-      .doc(this.$route.params.id as string)
-      .get();
-
-    // Firebase doesn't throw error if doc is deleted
-    if (!songDoc.exists) return this.$router.push({ name: "Home" });
-
-    this.song = { id: songDoc.id, ...(songDoc.data() as Song) };
-
-    this.sort = (this.$route.query.sort as Sort | undefined) ?? "DESC";
-
-    this.listComments();
   },
 
   methods: {
