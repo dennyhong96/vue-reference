@@ -12,7 +12,7 @@ const iconSecondaryDirective: Directive<HTMLElement> = {
   ) {
     const fontAwesomeIconName = binding.value.icon;
 
-    let iconClass = `fa fa-${fontAwesomeIconName} text-xl text-green-500`;
+    let iconClass = `fa fa-${fontAwesomeIconName} text-xl text-green-400`;
 
     if (binding.value.right) {
       iconClass = `${iconClass} float-right`;
