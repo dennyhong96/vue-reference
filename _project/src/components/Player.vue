@@ -66,6 +66,8 @@
 import { defineComponent } from "vue";
 import { mapActions, mapGetters, mapState } from "vuex";
 
+import { State } from "@/store";
+
 export default defineComponent({
   name: "Player",
 
@@ -74,12 +76,17 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions(["toggleAudio", "updateSeek"]),
+    ...mapActions("player", ["toggleAudio", "updateSeek"]),
   },
 
   computed: {
-    ...mapState(["seek", "duration", "playerProgress", "currentSong"]),
-    ...mapGetters(["isSongPlaying"]),
+    ...mapState({
+      seek: (state) => (state as State).player.seek,
+      duration: (state) => (state as State).player.duration,
+      playerProgress: (state) => (state as State).player.playerProgress,
+      currentSong: (state) => (state as State).player.currentSong,
+    }),
+    ...mapGetters("player", ["isSongPlaying"]),
   },
 });
 </script>

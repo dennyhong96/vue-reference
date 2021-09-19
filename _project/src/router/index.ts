@@ -76,7 +76,7 @@ router.beforeEach((to, from, next) => {
   // Redirect to home is route is protected but user is not logged in
   if (
     to.matched.some((matchedRoute) => !!matchedRoute.meta.requiresAuth) &&
-    !store.state.userLoggedIn
+    !store.state.auth.userLoggedIn
   ) {
     return next({ name: "Home" });
   }

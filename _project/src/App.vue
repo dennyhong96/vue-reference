@@ -28,7 +28,7 @@ export default defineComponent({
   },
 
   created() {
-    this.$store.dispatch("initLogin");
+    this.$store.dispatch("auth/initLogin");
   },
 });
 </script>

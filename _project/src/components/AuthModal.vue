@@ -75,10 +75,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapGetters, mapMutations, mapState } from "vuex";
+import { mapMutations, mapState } from "vuex";
 
 import LoginForm from "@/components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
+import { State } from "@/store";
 
 export default defineComponent({
   name: "AuthModal",
@@ -100,7 +101,9 @@ export default defineComponent({
     // ...mapState({
     //   isModalOpen: "authModalShow", // Alias 'isModalOpen' for 'authModalShow' state
     // }),
-    ...mapState(["authModalShow"]),
+    ...mapState({
+      authModalShow: (state) => (state as State).auth.authModalShow,
+    }),
     // ...mapGetters(["authModalShow"]), // Overkill since we don't do any computation with in the authModalShow getter
     // authModalShow() {
     //   return this.$store.getters.authModalShow;
@@ -108,7 +111,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapMutations(["toggleAuthModal"]),
+    ...mapMutations("auth", ["toggleAuthModal"]),
   },
 });
 </script>

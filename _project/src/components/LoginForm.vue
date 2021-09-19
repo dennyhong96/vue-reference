@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts">
-import { LoginFormFields } from "@/store";
+import { LoginFormFields } from "@/store/modules/auth";
 import { defineComponent } from "vue";
 import { mapMutations } from "vuex";
 
@@ -70,7 +70,7 @@ export default defineComponent({
   computed: {},
 
   methods: {
-    ...mapMutations(["toggleAuthModal"]),
+    ...mapMutations("auth", ["toggleAuthModal"]),
 
     async login(values: LoginFormFields) {
       this.loginInProgress = true;
@@ -78,7 +78,7 @@ export default defineComponent({
       this.loginAlertVariant = "bg-blue-500";
 
       try {
-        await this.$store.dispatch("login", values);
+        await this.$store.dispatch("auth/login", values);
 
         this.loginAlertVariant = "bg-green-500";
         this.loginAlertMessage = "Successs! Your are not logged in.";

@@ -121,6 +121,7 @@ import {
 } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
 import { CommentWithId, Comment } from "@/types/Comment";
+import { State } from "@/store";
 
 type Sort = "DESC" | "ASC";
 
@@ -156,8 +157,11 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState(["userLoggedIn"]),
-    ...mapGetters(["isSongPlaying"]),
+    ...mapState({
+      userLoggedIn: (state) => (state as State).auth.userLoggedIn,
+    }),
+
+    ...mapGetters(["player", "isSongPlaying"]),
 
     sortedComments(): CommentWithId[] {
       return this.comments.slice().sort((a, b) => {
@@ -187,7 +191,7 @@ export default defineComponent({
   },
 
   methods: {
-    ...mapActions(["playNewSong", "toggleAudio"]),
+    ...mapActions("player", ["playNewSong", "toggleAudio"]),
 
     async listComments() {
       const snapshots = await commentsCollections

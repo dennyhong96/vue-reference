@@ -140,7 +140,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import { RegisterFormFields } from "@/store";
+import { RegisterFormFields } from "@/store/modules/auth";
 import { mapMutations } from "vuex";
 
 export default defineComponent({
@@ -176,7 +176,7 @@ export default defineComponent({
   computed: {},
 
   methods: {
-    ...mapMutations(["toggleAuthModal"]),
+    ...mapMutations("auth", ["toggleAuthModal"]),
 
     async register(values: RegisterFormFields) {
       this.registerInProgress = true;
@@ -185,7 +185,7 @@ export default defineComponent({
       this.registerAlertMessage = "Please wait! Your account is being created.";
 
       try {
-        await this.$store.dispatch("register", values);
+        await this.$store.dispatch("auth/register", values);
 
         this.registerAlertVariant = "bg-green-500";
         this.registerAlertMessage = "Successs! Your account has been created.";

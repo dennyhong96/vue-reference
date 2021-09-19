@@ -1,14 +1,9 @@
 import { ComponentCustomProperties } from "vue";
 import { Store } from "vuex";
+import { AppStore } from "./store";
 
 declare module "@vue/runtime-core" {
-  // Declare your own store states.
-  interface State {
-    authModalShow: boolean;
-    userLoggedIn: boolean;
-  }
-
   interface ComponentCustomProperties {
-    $store: Store<State>;
+    $store: AppStore;
   }
 }

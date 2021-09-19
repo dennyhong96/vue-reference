@@ -60,6 +60,8 @@
 import { defineComponent } from "vue";
 import { mapMutations, mapState } from "vuex";
 
+import { State } from "@/store";
+
 export default defineComponent({
   name: "AppHeader",
 
@@ -70,18 +72,20 @@ export default defineComponent({
   },
 
   computed: {
-    ...mapState(["userLoggedIn"]),
+    ...mapState({
+      userLoggedIn: (state) => (state as State).auth.userLoggedIn,
+    }),
   },
 
   methods: {
-    ...mapMutations(["toggleAuthModal"]),
+    ...mapMutations("auth", ["toggleAuthModal"]),
 
     handleChangeLocale(evt: Event) {
       this.$i18n.locale = (evt.target as HTMLSelectElement).value;
     },
 
     signOut() {
-      this.$store.dispatch("signOut");
+      this.$store.dispatch("auth/signOut");
       if (!this.$route.meta.requiresAuth) return;
       this.$router.push({ name: "Home" });
     },
