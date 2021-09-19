@@ -1,12 +1,7 @@
 import { auth, usersCollection } from "@/includes/firebase";
 import { ActionContext } from "vuex";
 
-import { State } from "..";
-
-export interface AuthState {
-  authModalShow: boolean;
-  userLoggedIn: boolean;
-}
+import { AuthState, State } from "..";
 
 export interface RegisterFormFields {
   name: string;

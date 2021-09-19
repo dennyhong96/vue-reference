@@ -1,17 +1,9 @@
 import { ActionContext } from "vuex";
 import { Howl } from "howler";
 
-import { State } from "..";
+import { PlayerState, State } from "..";
 import { SongWithId } from "@/types/Song";
 import { formatTime } from "@/includes/helpers";
-
-export interface PlayerState {
-  currentSong: SongWithId | null;
-  sound: Howl | null;
-  seek: string;
-  duration: string;
-  playerProgress: string;
-}
 
 export const state: () => PlayerState = () => ({
   currentSong: null,

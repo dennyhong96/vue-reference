@@ -1,20 +1,34 @@
 import { createStore } from "vuex";
+import { Howl } from "howler";
 
-import auth, { AuthState } from "@/store/modules/auth";
-import player, { PlayerState } from "@/store/modules/player";
+import modules from "@/store/modules";
+import { SongWithId } from "@/types/Song";
+
+export interface AuthState {
+  authModalShow: boolean;
+  userLoggedIn: boolean;
+}
+
+export interface PlayerState {
+  currentSong: SongWithId | null;
+  sound: Howl | null;
+  seek: string;
+  duration: string;
+  playerProgress: string;
+}
+
+export interface DummyState {
+  foo: string;
+}
 
 export interface State {
   auth: AuthState;
   player: PlayerState;
+  dummy: DummyState;
 }
 
-const store = createStore<State>({
-  modules: {
-    auth,
-    player,
-  },
-});
-
 export type AppStore = typeof store;
+
+const store = createStore<State>({ modules });
 
 export default store;
