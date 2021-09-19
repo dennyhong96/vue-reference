@@ -5,6 +5,7 @@ import router from "@/router";
 import store from "@/store";
 import i18n from "@/includes/i18n";
 import VeeValidatePlugin from "@/includes/validation";
+import globalComponentsPlugin from "@/includes/_globals";
 import { auth } from "@/includes/firebase";
 import iconDirective from "@/directives/icon";
 import "@/assets/tailwind.css";
@@ -27,6 +28,9 @@ auth.onAuthStateChanged(() => {
   app.use(router);
   app.use(VeeValidatePlugin, { foo: 5 });
   app.use(i18n);
+
+  // Automatically register common components globally
+  app.use(globalComponentsPlugin);
 
   // Directives
   app.directive("icon", iconDirective);
