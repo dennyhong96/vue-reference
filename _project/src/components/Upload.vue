@@ -112,6 +112,21 @@ export default defineComponent({
 
         const songId = songsCollection.doc().id;
 
+        // Throw error if the user does NOT have connection to the internet (Cached PWA Mode)
+        if (!navigator.onLine) {
+          this.uploads.push({
+            songId,
+            task: {} as firebase.storage.UploadTask,
+            currentProgress: 100,
+            name: file.name,
+            variant: "bg-red-400",
+            icon: "fas fa-times",
+            textClass: "text-red-400",
+          });
+
+          return;
+        }
+
         this.uploads.push({
           songId,
           task: uploadTask,
