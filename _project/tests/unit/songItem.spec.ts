@@ -1,18 +1,7 @@
 import { shallowMount, RouterLinkStub } from "@vue/test-utils";
 
 import SongItem from "@/components/SongItem.vue";
-import { SongWithId } from "@/types/Song";
-
-const TEST_SONG: SongWithId = {
-  id: "test-id",
-  uid: "test-uid",
-  displayName: "test-user",
-  originalName: "test-song",
-  modifiedName: "test-song",
-  genre: "test-genre",
-  commentCount: 0,
-  url: "",
-};
+import { TEST_SONG } from "./__mocks__";
 
 describe("SongItem.vue", () => {
   test("should render display name of the song author", () => {
