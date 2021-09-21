@@ -7,7 +7,7 @@ exports[`Snapshot SongItem.vue Renders correctly 1`] = `
 >
   <div>
     <router-link-stub
-      class="font-bold block text-gray-600"
+      class="font-bold block text-gray-600 song-link"
       to="[object Object]"
     />
     <span

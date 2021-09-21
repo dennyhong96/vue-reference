@@ -8,7 +8,7 @@
     <div>
       <router-link
         :to="{ name: 'Song', params: { id: song.id } }"
-        class="font-bold block text-gray-600"
+        class="font-bold block text-gray-600 song-link"
         >{{ song.modifiedName }}</router-link
       >
       <span class="text-gray-500 text-sm">{{ song.displayName }}</span>

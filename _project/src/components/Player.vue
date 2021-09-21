@@ -6,7 +6,11 @@
     <div class="relative">
       <!-- Play/Pause Button -->
       <div class="float-left w-7 h-7 leading-3">
-        <button type="button" @click.prevent="toggleAudio">
+        <button
+          type="button"
+          @click.prevent="toggleAudio"
+          id="player-play-button"
+        >
           <i
             class="text-gray-500 text-xl"
             :class="{
