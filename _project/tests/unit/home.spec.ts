@@ -3,7 +3,7 @@ import { shallowMount } from "@vue/test-utils";
 import Home from "@/views/Home.vue";
 import SongItem from "@/components/SongItem.vue";
 
-// Mock firebae
+// Mock firebase module
 jest.mock("@/includes/firebase", () => {
   //
 });
