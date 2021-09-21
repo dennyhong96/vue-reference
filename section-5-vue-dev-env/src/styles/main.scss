@@ -1,0 +1,15 @@
+@import "variables";
+
+h1 {
+  color: $red;
+
+  &:hover {
+    color: darken($red, 15);
+  }
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
