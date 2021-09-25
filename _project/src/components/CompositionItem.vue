@@ -88,13 +88,13 @@ interface CompositionItemState {
   showEditForm: boolean;
 
   formValidationSchema: {
-    modifiedName: string;
-    genre: string;
+    modifiedName: "required";
+    genre: "alpha_spaces";
   };
 
   showAlert: boolean;
   isUpdating: boolean;
-  alertVariant: string;
+  alertVariant: "bg-blue-500" | "bg-green-500" | "bg-red-500";
   alertMessage: string;
 }
 

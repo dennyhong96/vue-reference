@@ -13,7 +13,7 @@ exports[`Snapshot SongItem.vue Renders correctly 1`] = `
     <span
       class="text-gray-500 text-sm"
     >
-      test-user
+      Uploaded by - test-user
     </span>
   </div>
   <div

@@ -53,13 +53,13 @@ import useAuth from "@/composables/useAuth";
 
 interface LoginFormState {
   loginValidationSchema: {
-    email: string;
-    password: string;
+    email: "required|email";
+    password: "required|min:3|max:32";
   };
 
   loginInProgress: boolean; // to disable submit button
   loginShowAlert: boolean; // toggle showing the alert
-  loginAlertVariant: string; // for alert background color
+  loginAlertVariant: "bg-blue-500" | "bg-green-500" | "bg-red-500"; // for alert background color
   loginAlertMessage: string; // for alert message
 }
 

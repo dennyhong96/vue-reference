@@ -134,12 +134,12 @@ interface SongState {
   sort: Sort;
 
   validationSchema: {
-    comment: string;
+    comment: "required|min:3";
   };
 
   submissionInProgress: boolean;
   showAlert: boolean;
-  alertVariant: string;
+  alertVariant: "bg-blue-500" | "bg-green-500" | "bg-red-500";
   alertMessage: string;
 }
 

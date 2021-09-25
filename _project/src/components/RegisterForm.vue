@@ -146,25 +146,25 @@ import useAuth from "@/composables/useAuth";
 interface RegisterFormState {
   // Initial values for the form
   defaultFormData: {
-    country: string;
-    role: string;
+    country: "USA";
+    role: "Listener";
   };
 
   // Validation schema specify the rules to use for fields
   registerValidationSchema: {
-    name: string;
-    email: string;
-    age: string;
-    password: string;
-    confirm_password: string; // Make sure value in confirm_password matches password
-    country: string;
-    role: string;
-    tos: string; // Must agree to terms and confition, must check the checkbox
+    name: "required|min:3|max:100|alpha_spaces";
+    email: "required|min:3|max:100|email";
+    age: "required|min_value:18|max_value:100";
+    password: "required|min:3|max:32";
+    confirm_password: "passwords_mismatch:@password"; // Make sure value in confirm_password matches password
+    country: "required|country_excluded:Antarctica";
+    role: "required";
+    tos: "tos"; // Must agree to terms and confition, must check the checkbox
   };
 
   registerInProgress: boolean;
   registerShowAlert: boolean;
-  registerAlertVariant: string;
+  registerAlertVariant: "bg-blue-500" | "bg-green-500" | "bg-red-500";
   registerAlertMessage: string;
 }
 

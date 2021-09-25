@@ -15,7 +15,7 @@ describe("SongItem.vue", () => {
     });
 
     const songAuthor = wrapper.find("span.text-gray-500.text-sm");
-    expect(songAuthor.text()).toBe(TEST_SONG.displayName);
+    expect(songAuthor.text()).toBe(`Uploaded by - ${TEST_SONG.displayName}`);
     // expect(songAuthor.text() === TEST_SONG.displayName).toBe(false); // Avoid boolean asertions
   });
 
