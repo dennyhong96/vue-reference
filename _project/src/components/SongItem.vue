@@ -11,7 +11,9 @@
         class="font-bold block text-gray-600 song-link"
         >{{ song.modifiedName }}</router-link
       >
-      <span class="text-gray-500 text-sm">{{ song.displayName }}</span>
+      <span class="text-gray-500 text-sm"
+        >Uploaded by - {{ song.displayName }}</span
+      >
     </div>
 
     <div class="text-gray-600 text-lg">

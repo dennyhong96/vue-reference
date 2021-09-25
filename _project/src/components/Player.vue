@@ -67,30 +67,41 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapActions, mapGetters, mapState } from "vuex";
-
-import { State } from "@/store";
+import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "Player",
 
-  data() {
-    return {};
-  },
+  setup() {
+    const store = useStore();
 
-  methods: {
-    ...mapActions("player", ["toggleAudio", "updateSeek"]),
-  },
+    const seek = computed(() => store.state.player.seek);
+    const duration = computed(() => store.state.player.duration);
+    const playerProgress = computed(() => store.state.player.playerProgress);
+    const currentSong = computed(() => store.state.player.currentSong);
 
-  computed: {
-    ...mapState({
-      seek: (state) => (state as State).player.seek,
-      duration: (state) => (state as State).player.duration,
-      playerProgress: (state) => (state as State).player.playerProgress,
-      currentSong: (state) => (state as State).player.currentSong,
-    }),
-    ...mapGetters("player", ["isSongPlaying"]),
+    const isSongPlaying = computed(() => store.getters["player/isSongPlaying"]);
+
+    const toggleAudio = () => store.dispatch("player/toggleAudio");
+    const updateSeek = (evt: MouseEvent): void => {
+      store.dispatch("player/updateSeek", evt);
+    };
+
+    return {
+      // State
+      seek,
+      duration,
+      playerProgress,
+      currentSong,
+
+      // Getter
+      isSongPlaying,
+
+      // Action
+      toggleAudio,
+      updateSeek,
+    };
   },
 });
 </script>

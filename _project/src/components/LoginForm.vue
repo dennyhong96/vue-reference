@@ -46,53 +46,74 @@
 </template>
 
 <script lang="ts">
+import { defineComponent, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
+
 import { LoginFormFields } from "@/store/modules/auth";
-import { defineComponent } from "vue";
-import { mapMutations } from "vuex";
+
+interface LoginFormState {
+  loginValidationSchema: {
+    email: string;
+    password: string;
+  };
+
+  loginInProgress: boolean; // to disable submit button
+  loginShowAlert: boolean; // toggle showing the alert
+  loginAlertVariant: string; // for alert background color
+  loginAlertMessage: string; // for alert message
+}
 
 export default defineComponent({
   name: "LoginForm",
 
-  data() {
-    return {
+  setup() {
+    const store = useStore();
+
+    const state = reactive<LoginFormState>({
       loginValidationSchema: {
         email: "required|email",
         password: "required|min:3|max:32",
       },
 
-      loginInProgress: false, // to disable submit button
-      loginShowAlert: false, // toggle showing the alert
-      loginAlertVariant: "bg-blue-500", // for alert background color
-      loginAlertMessage: "Please wait! Login in progress.", // for alert message
-    };
-  },
+      loginInProgress: false,
+      loginShowAlert: false,
+      loginAlertVariant: "bg-blue-500",
+      loginAlertMessage: "Please wait! Login in progress.",
+    });
 
-  computed: {},
+    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
 
-  methods: {
-    ...mapMutations("auth", ["toggleAuthModal"]),
-
-    async login(values: LoginFormFields) {
-      this.loginInProgress = true;
-      this.loginShowAlert = true;
-      this.loginAlertVariant = "bg-blue-500";
+    const login = async (values: LoginFormFields) => {
+      state.loginInProgress = true;
+      state.loginShowAlert = true;
+      state.loginAlertVariant = "bg-blue-500";
 
       try {
-        await this.$store.dispatch("auth/login", values);
+        await store.dispatch("auth/login", values);
 
-        this.loginAlertVariant = "bg-green-500";
-        this.loginAlertMessage = "Successs! Your are not logged in.";
+        state.loginAlertVariant = "bg-green-500";
+        state.loginAlertMessage = "Successs! Your are not logged in.";
 
         window.location.reload();
-        // this.toggleAuthModal();
+        // state.toggleAuthModal();
       } catch (error) {
-        this.loginInProgress = false;
-        this.loginAlertVariant = "bg-red-500";
-        this.loginAlertMessage =
-          error.message ??
+        state.loginInProgress = false;
+        state.loginAlertVariant = "bg-red-500";
+        state.loginAlertMessage =
+          (error as Error).message ??
           "An unexpeced error occured. Please try again later.";
       }
-    },
+    };
+
+    return {
+      ...toRefs(state),
+
+      // Mutation
+      toggleAuthModal,
+
+      // Actions
+      login,
+    };
   },
 });
 </script>

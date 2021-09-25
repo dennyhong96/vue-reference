@@ -77,18 +77,32 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue";
+import { defineComponent, PropType, reactive, toRefs } from "vue";
 
 import { songsCollection, storage } from "@/includes/firebase";
 import { SongWithId } from "@/types/Song";
 
 type SongForm = Pick<SongWithId, "modifiedName" | "genre">;
 
+interface CompositionItemState {
+  showEditForm: boolean;
+
+  formValidationSchema: {
+    modifiedName: string;
+    genre: string;
+  };
+
+  showAlert: boolean;
+  isUpdating: boolean;
+  alertVariant: string;
+  alertMessage: string;
+}
+
 export default defineComponent({
   name: "CompositionItem",
 
-  data() {
-    return {
+  setup(props) {
+    const state = reactive<CompositionItemState>({
       showEditForm: false,
 
       formValidationSchema: {
@@ -100,6 +114,74 @@ export default defineComponent({
       isUpdating: false,
       alertVariant: "bg-blue-500",
       alertMessage: "Please wait, updating song info.",
+    });
+
+    const handleDeleteSong = async () => {
+      state.isUpdating = true;
+      state.showAlert = true;
+      state.alertVariant = "bg-blue-500";
+      state.alertMessage = "Please wait, deleting song...";
+
+      try {
+        // Delete song from DB
+        const deleteFromDBPromise = songsCollection.doc(props.song.id).delete();
+
+        // Delete song file from storage
+        const storageRef = storage.ref();
+        const songRef = storageRef.child(`songs/${props.song.originalName}`);
+        const deleteFromStoragePromise = songRef.delete();
+
+        await Promise.all([deleteFromDBPromise, deleteFromStoragePromise]);
+
+        // Delete song local data
+        props.handleDeleteLocalSong(props.song.id);
+      } catch (error) {
+        console.error("Delete song error:", error);
+      }
+    };
+
+    const handleUpdateSong = async (values: SongForm) => {
+      state.isUpdating = true;
+      state.showAlert = true;
+      state.alertVariant = "bg-blue-500";
+      state.alertMessage = "Please wait, updating song info.";
+
+      const { modifiedName, genre } = values;
+      if (
+        modifiedName !== props.song.modifiedName ||
+        genre !== props.song.genre
+      ) {
+        try {
+          // Update DB
+          await songsCollection
+            .doc(props.song.id)
+            .update({ modifiedName, genre });
+
+          // Update Local data
+          props.handleUpdateLocalSongs({
+            id: props.song.id,
+            modifiedName,
+            genre,
+          });
+
+          props.handleUpdateHasUnsavedForm(false);
+          state.isUpdating = false;
+          state.alertVariant = "bg-green-500";
+          state.alertMessage = "Song is successfully updated...";
+        } catch (error) {
+          console.error("Update song error:", error);
+          state.isUpdating = false;
+          state.alertVariant = "bg-red-500";
+          state.alertMessage = "Something went wrong, please try again later.";
+        }
+      }
+    };
+
+    return {
+      ...toRefs(state),
+
+      handleDeleteSong,
+      handleUpdateSong,
     };
   },
 
@@ -124,69 +206,6 @@ export default defineComponent({
     handleUpdateHasUnsavedForm: {
       required: true,
       type: Function as PropType<(value: boolean) => void>,
-    },
-  },
-
-  methods: {
-    async handleUpdateSong(values: SongForm) {
-      this.isUpdating = true;
-      this.showAlert = true;
-      this.alertVariant = "bg-blue-500";
-      this.alertMessage = "Please wait, updating song info.";
-
-      const { modifiedName, genre } = values;
-      if (
-        modifiedName !== this.song.modifiedName ||
-        genre !== this.song.genre
-      ) {
-        try {
-          // Update DB
-          await songsCollection
-            .doc(this.song.id)
-            .update({ modifiedName, genre });
-
-          // Update Local data
-          this.handleUpdateLocalSongs({
-            id: this.song.id,
-            modifiedName,
-            genre,
-          });
-
-          this.handleUpdateHasUnsavedForm(false);
-          this.isUpdating = false;
-          this.alertVariant = "bg-green-500";
-          this.alertMessage = "Song is successfully updated...";
-        } catch (error) {
-          console.error("Update song error:", error);
-          this.isUpdating = false;
-          this.alertVariant = "bg-red-500";
-          this.alertMessage = "Something went wrong, please try again later.";
-        }
-      }
-    },
-
-    async handleDeleteSong() {
-      this.isUpdating = true;
-      this.showAlert = true;
-      this.alertVariant = "bg-blue-500";
-      this.alertMessage = "Please wait, deleting song...";
-
-      try {
-        // Delete song from DB
-        const deleteFromDBPromise = songsCollection.doc(this.song.id).delete();
-
-        // Delete song file from storage
-        const storageRef = storage.ref();
-        const songRef = storageRef.child(`songs/${this.song.originalName}`);
-        const deleteFromStoragePromise = songRef.delete();
-
-        await Promise.all([deleteFromDBPromise, deleteFromStoragePromise]);
-
-        // Delete song local data
-        this.handleDeleteLocalSong(this.song.id);
-      } catch (error) {
-        console.error("Delete song error:", error);
-      }
     },
   },
 

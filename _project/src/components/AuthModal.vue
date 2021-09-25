@@ -74,12 +74,11 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
-import { mapMutations, mapState } from "vuex";
+import { computed, defineComponent, ref } from "vue";
+import { useStore } from "vuex";
 
 import LoginForm from "@/components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
-import { State } from "@/store";
 
 export default defineComponent({
   name: "AuthModal",
@@ -89,29 +88,23 @@ export default defineComponent({
     RegisterForm,
   },
 
-  data() {
+  setup() {
+    const store = useStore();
+
+    const tab = ref<"LOGIN" | "REGISTER">("LOGIN");
+
+    const authModalShow = computed(() => store.state.auth.authModalShow);
+    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
+
     return {
-      tab: "LOGIN" as "LOGIN" | "REGISTER",
+      tab,
+
+      // State
+      authModalShow,
+
+      // Mutation
+      toggleAuthModal,
     };
-  },
-
-  computed: {
-    // Use mapState when simply retriving a state value, mapState generates simple getters that return the state
-    // use MapGetters when performing a computation with a state value
-    // ...mapState({
-    //   isModalOpen: "authModalShow", // Alias 'isModalOpen' for 'authModalShow' state
-    // }),
-    ...mapState({
-      authModalShow: (state) => (state as State).auth.authModalShow,
-    }),
-    // ...mapGetters(["authModalShow"]), // Overkill since we don't do any computation with in the authModalShow getter
-    // authModalShow() {
-    //   return this.$store.getters.authModalShow;
-    // },
-  },
-
-  methods: {
-    ...mapMutations("auth", ["toggleAuthModal"]),
   },
 });
 </script>

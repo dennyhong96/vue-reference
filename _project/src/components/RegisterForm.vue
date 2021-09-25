@@ -138,68 +138,100 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
+import { useStore } from "vuex";
 
 import { RegisterFormFields } from "@/store/modules/auth";
-import { mapMutations } from "vuex";
+
+interface RegisterFormState {
+  // Initial values for the form
+  defaultFormData: {
+    country: string;
+    role: string;
+  };
+
+  // Validation schema specify the rules to use for fields
+  registerValidationSchema: {
+    name: string;
+    email: string;
+    age: string;
+    password: string;
+    confirm_password: string; // Make sure value in confirm_password matches password
+    country: string;
+    role: string;
+    tos: string; // Must agree to terms and confition, must check the checkbox
+  };
+
+  registerInProgress: boolean;
+  registerShowAlert: boolean;
+  registerAlertVariant: string;
+  registerAlertMessage: string;
+}
 
 export default defineComponent({
-  name: "AuthModal",
+  name: "RegisterForm",
 
-  data() {
-    return {
-      // Initial values for the form
+  setup() {
+    const store = useStore();
+
+    const state = reactive<RegisterFormState>({
       defaultFormData: {
         country: "USA",
         role: "Listener",
       },
 
-      // Validation schema specify the rules to use for fields
       registerValidationSchema: {
         name: "required|min:3|max:100|alpha_spaces",
         email: "required|min:3|max:100|email",
         age: "required|min_value:18|max_value:100",
         password: "required|min:3|max:32",
-        confirm_password: "passwords_mismatch:@password", // Make sure value in confirm_password matches password
+        confirm_password: "passwords_mismatch:@password",
         country: "required|country_excluded:Antarctica",
         role: "required",
-        tos: "tos", // Must agree to terms and confition, must check the checkbox
+        tos: "tos",
       },
 
       registerInProgress: false,
       registerShowAlert: false,
       registerAlertVariant: "bg-blue-500",
       registerAlertMessage: "Please wait! Your account is being created.",
-    };
-  },
+    });
 
-  computed: {},
+    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
 
-  methods: {
-    ...mapMutations("auth", ["toggleAuthModal"]),
-
-    async register(values: RegisterFormFields) {
-      this.registerInProgress = true;
-      this.registerShowAlert = true;
-      this.registerAlertVariant = "bg-blue-500";
-      this.registerAlertMessage = "Please wait! Your account is being created.";
+    const register = async (values: RegisterFormFields) => {
+      state.registerInProgress = true;
+      state.registerShowAlert = true;
+      state.registerAlertVariant = "bg-blue-500";
+      state.registerAlertMessage =
+        "Please wait! Your account is being created.";
 
       try {
-        await this.$store.dispatch("auth/register", values);
+        await store.dispatch("auth/register", values);
 
-        this.registerAlertVariant = "bg-green-500";
-        this.registerAlertMessage = "Successs! Your account has been created.";
+        state.registerAlertVariant = "bg-green-500";
+        state.registerAlertMessage = "Successs! Your account has been created.";
 
         window.location.reload();
-        // this.toggleAuthModal();
+        // state.toggleAuthModal();
       } catch (error) {
-        this.registerInProgress = false;
-        this.registerAlertVariant = "bg-red-500";
-        this.registerAlertMessage =
-          error.message ??
+        state.registerInProgress = false;
+        state.registerAlertVariant = "bg-red-500";
+        state.registerAlertMessage =
+          (error as Error).message ??
           "An unexpeced error occured. Please try again later.";
       }
-    },
+    };
+
+    return {
+      ...toRefs(state),
+
+      // Mutation
+      toggleAuthModal,
+
+      // Action
+      register,
+    };
   },
 });
 </script>

@@ -75,7 +75,7 @@ const actions = {
 
   updateSeek(
     { state, dispatch }: ActionContext<PlayerState, State>,
-    evt: PointerEvent
+    evt: MouseEvent
   ): void {
     if (!state.sound) return;
 

@@ -46,7 +46,13 @@
 
 <script lang="ts">
 import firebase, { auth, songsCollection, storage } from "@/includes/firebase";
-import { defineComponent, PropType } from "vue";
+import {
+  defineComponent,
+  onBeforeUnmount,
+  PropType,
+  reactive,
+  toRefs,
+} from "vue";
 
 import { Song, SongWithId } from "@/types/Song";
 
@@ -60,35 +66,22 @@ export interface Upload {
   textClass: "" | "text-red-400" | "text-green-400";
 }
 
+interface UpdateState {
+  isDraggedOver: boolean;
+  uploads: Upload[];
+}
+
 export default defineComponent({
   name: "Upload",
 
-  data() {
-    return {
+  setup(props) {
+    const state = reactive<UpdateState>({
       isDraggedOver: false,
-      uploads: [] as Upload[],
-    };
-  },
+      uploads: [],
+    });
 
-  props: {
-    handleCreateLocalSong: {
-      required: true,
-      type: Function as PropType<(newSong: SongWithId) => void>,
-    },
-  },
-
-  beforeUnmount() {
-    // Cancel files upload operations before component unmount
-    this.cancelUploads();
-  },
-
-  methods: {
-    cancelUploads() {
-      this.uploads.forEach((upload) => upload.task.cancel());
-    },
-
-    async handleUpload(evt: DragEvent | Event) {
-      this.isDraggedOver = false;
+    const handleUpload = async (evt: DragEvent | Event) => {
+      state.isDraggedOver = false;
 
       let files: File[] | undefined;
       if ("dataTransfer" in evt) {
@@ -114,7 +107,7 @@ export default defineComponent({
 
         // Throw error if the user does NOT have connection to the internet (Cached PWA Mode)
         if (!navigator.onLine) {
-          this.uploads.push({
+          state.uploads.push({
             songId,
             task: {} as firebase.storage.UploadTask,
             currentProgress: 100,
@@ -127,7 +120,7 @@ export default defineComponent({
           return;
         }
 
-        this.uploads.push({
+        state.uploads.push({
           songId,
           task: uploadTask,
           currentProgress: 0,
@@ -137,7 +130,7 @@ export default defineComponent({
           textClass: "",
         });
 
-        const upload = this.uploads.find((upload) => upload.songId === songId);
+        const upload = state.uploads.find((upload) => upload.songId === songId);
 
         uploadTask.on(
           "state_changed",
@@ -179,7 +172,7 @@ export default defineComponent({
             await songsCollection.doc(songId).set(song);
 
             // Add new song to local data
-            this.handleCreateLocalSong({ id: songId, ...song });
+            props.handleCreateLocalSong({ id: songId, ...song });
 
             if (!upload) return;
             upload.variant = "bg-green-400";
@@ -187,13 +180,31 @@ export default defineComponent({
             upload.textClass = "text-green-400";
 
             setTimeout(() => {
-              this.uploads = this.uploads.filter(
+              state.uploads = state.uploads.filter(
                 (upload) => upload.songId !== songId
               );
             }, 3000);
           }
         );
       });
+    };
+
+    const cancelUploads = () => {
+      state.uploads.forEach((upload) => upload.task.cancel());
+    };
+    onBeforeUnmount(cancelUploads);
+
+    return {
+      handleUpload,
+
+      ...toRefs(state),
+    };
+  },
+
+  props: {
+    handleCreateLocalSong: {
+      required: true,
+      type: Function as PropType<(newSong: SongWithId) => void>,
     },
   },
 });
