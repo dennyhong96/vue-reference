@@ -57,31 +57,29 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, WritableComputedRef } from "vue";
+import useAuth from "@/composables/useAuth";
+import { defineComponent, WritableComputedRef } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
-import { useStore } from "vuex";
 
 type Locale = "en" | "zh" | "fr";
 
 export default defineComponent({
   name: "AppHeader",
 
-  setup(props, context) {
+  setup() {
     const { locale } = useI18n();
-    const store = useStore();
+
     const router = useRouter();
     const route = useRoute();
 
-    const userLoggedIn = computed<boolean>(() => store.state.auth.userLoggedIn);
-
-    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
+    const { userLoggedIn, toggleAuthModal, signOut: signOutAction } = useAuth();
 
     const handleChangeLocale = (evt: Event) =>
       (locale.value = (evt.target as HTMLInputElement).value);
 
-    const signOut = () => {
-      store.dispatch("auth/signOut");
+    const signOut = async () => {
+      await signOutAction();
       if (!route.meta.requiresAuth) return;
       router.push({ name: "Home" });
     };

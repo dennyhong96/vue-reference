@@ -13,11 +13,11 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { useStore } from "vuex";
 
 import AppHeader from "@/components/AppHeader.vue";
 import AuthModal from "@/components/AuthModal.vue";
 import Player from "@/components/Player.vue";
+import useAuth from "@/composables/useAuth";
 
 export default defineComponent({
   name: "App",
@@ -29,8 +29,8 @@ export default defineComponent({
   },
 
   setup() {
-    const store = useStore();
-    store.dispatch("auth/initLogin");
+    const { initLogin } = useAuth();
+    initLogin();
   },
 });
 </script>

@@ -67,41 +67,14 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent } from "vue";
-import { useStore } from "vuex";
+import usePlayer from "@/composables/usePlayer";
+import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "Player",
 
   setup() {
-    const store = useStore();
-
-    const seek = computed(() => store.state.player.seek);
-    const duration = computed(() => store.state.player.duration);
-    const playerProgress = computed(() => store.state.player.playerProgress);
-    const currentSong = computed(() => store.state.player.currentSong);
-
-    const isSongPlaying = computed(() => store.getters["player/isSongPlaying"]);
-
-    const toggleAudio = () => store.dispatch("player/toggleAudio");
-    const updateSeek = (evt: MouseEvent): void => {
-      store.dispatch("player/updateSeek", evt);
-    };
-
-    return {
-      // State
-      seek,
-      duration,
-      playerProgress,
-      currentSong,
-
-      // Getter
-      isSongPlaying,
-
-      // Action
-      toggleAudio,
-      updateSeek,
-    };
+    return { ...usePlayer() };
   },
 });
 </script>

@@ -47,9 +47,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "vuex";
 
 import { LoginFormFields } from "@/store/modules/auth";
+import useAuth from "@/composables/useAuth";
 
 interface LoginFormState {
   loginValidationSchema: {
@@ -67,8 +67,6 @@ export default defineComponent({
   name: "LoginForm",
 
   setup() {
-    const store = useStore();
-
     const state = reactive<LoginFormState>({
       loginValidationSchema: {
         email: "required|email",
@@ -81,7 +79,7 @@ export default defineComponent({
       loginAlertMessage: "Please wait! Login in progress.",
     });
 
-    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
+    const { toggleAuthModal, login: loginAction } = useAuth();
 
     const login = async (values: LoginFormFields) => {
       state.loginInProgress = true;
@@ -89,7 +87,7 @@ export default defineComponent({
       state.loginAlertVariant = "bg-blue-500";
 
       try {
-        await store.dispatch("auth/login", values);
+        await loginAction(values);
 
         state.loginAlertVariant = "bg-green-500";
         state.loginAlertMessage = "Successs! Your are not logged in.";

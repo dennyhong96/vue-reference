@@ -23,10 +23,10 @@ const getters = {
 
 // actions
 const actions = {
-  async playNewSong(
+  playNewSong(
     { commit, state, dispatch }: ActionContext<PlayerState, State>,
     song: SongWithId
-  ): Promise<void> {
+  ): void {
     // Pause the audio and remove from memory
     if (state.sound) state.sound.unload();
 
@@ -42,9 +42,7 @@ const actions = {
     });
   },
 
-  async toggleAudio({
-    state,
-  }: ActionContext<PlayerState, State>): Promise<void> {
+  toggleAudio({ state }: ActionContext<PlayerState, State>): void {
     if (!state.sound) return;
 
     if (state.sound.playing()) {

@@ -114,7 +114,6 @@
 import { defineComponent, reactive, computed, watchEffect, toRefs } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { FormContext } from "vee-validate";
-import { useStore } from "vuex";
 
 import {
   auth,
@@ -123,6 +122,8 @@ import {
 } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
 import { CommentWithId, Comment } from "@/types/Comment";
+import useAuth from "@/composables/useAuth";
+import usePlayer from "@/composables/usePlayer";
 
 type Sort = "DESC" | "ASC";
 
@@ -262,19 +263,8 @@ export default defineComponent({
       });
     });
 
-    const store = useStore();
-    const userLoggedIn = computed(() => store.state.auth.userLoggedIn);
-
-    const isSongPlaying = computed<boolean>(
-      () => store.getters["player/isSongPlaying"]
-    );
-
-    const playNewSong = (song: SongWithId | null) => {
-      if (!song) return;
-      store.dispatch("player/playNewSong", song);
-    };
-
-    const toggleAudio = () => store.dispatch("player/toggleAudio");
+    const { userLoggedIn } = useAuth();
+    const { isSongPlaying, playNewSong, toggleAudio } = usePlayer();
 
     return {
       handleSubmitComment,

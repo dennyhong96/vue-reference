@@ -139,9 +139,9 @@
 
 <script lang="ts">
 import { defineComponent, reactive, toRefs } from "vue";
-import { useStore } from "vuex";
 
 import { RegisterFormFields } from "@/store/modules/auth";
+import useAuth from "@/composables/useAuth";
 
 interface RegisterFormState {
   // Initial values for the form
@@ -172,8 +172,6 @@ export default defineComponent({
   name: "RegisterForm",
 
   setup() {
-    const store = useStore();
-
     const state = reactive<RegisterFormState>({
       defaultFormData: {
         country: "USA",
@@ -197,7 +195,7 @@ export default defineComponent({
       registerAlertMessage: "Please wait! Your account is being created.",
     });
 
-    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
+    const { toggleAuthModal, register: registerAction } = useAuth();
 
     const register = async (values: RegisterFormFields) => {
       state.registerInProgress = true;
@@ -207,7 +205,7 @@ export default defineComponent({
         "Please wait! Your account is being created.";
 
       try {
-        await store.dispatch("auth/register", values);
+        await registerAction(values);
 
         state.registerAlertVariant = "bg-green-500";
         state.registerAlertMessage = "Successs! Your account has been created.";

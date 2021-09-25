@@ -74,11 +74,11 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, ref } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, ref } from "vue";
 
 import LoginForm from "@/components/LoginForm.vue";
 import RegisterForm from "@/components/RegisterForm.vue";
+import useAuth from "@/composables/useAuth";
 
 export default defineComponent({
   name: "AuthModal",
@@ -89,12 +89,9 @@ export default defineComponent({
   },
 
   setup() {
-    const store = useStore();
-
     const tab = ref<"LOGIN" | "REGISTER">("LOGIN");
 
-    const authModalShow = computed(() => store.state.auth.authModalShow);
-    const toggleAuthModal = () => store.commit("auth/toggleAuthModal");
+    const { authModalShow, toggleAuthModal } = useAuth();
 
     return {
       tab,
