@@ -111,9 +111,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, computed, watchEffect, toRefs } from "vue";
+import { useRoute, useRouter } from "vue-router";
 import { FormContext } from "vee-validate";
-import { mapActions, mapGetters, mapState } from "vuex";
+import { useStore } from "vuex";
 
 import {
   auth,
@@ -122,19 +123,37 @@ import {
 } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
 import { CommentWithId, Comment } from "@/types/Comment";
-import { State } from "@/store";
 
 type Sort = "DESC" | "ASC";
+
+interface SongState {
+  song: SongWithId | null;
+
+  comments: CommentWithId[];
+  sort: Sort;
+
+  validationSchema: {
+    comment: string;
+  };
+
+  submissionInProgress: boolean;
+  showAlert: boolean;
+  alertVariant: string;
+  alertMessage: string;
+}
 
 export default defineComponent({
   name: "Song",
 
-  data() {
-    return {
-      song: null as SongWithId | null,
+  setup() {
+    const route = useRoute();
+    const router = useRouter();
 
-      comments: [] as CommentWithId[],
-      sort: "DESC" as Sort,
+    const state = reactive<SongState>({
+      song: null,
+
+      comments: [],
+      sort: "DESC",
 
       validationSchema: {
         comment: "required|min:3",
@@ -144,102 +163,36 @@ export default defineComponent({
       showAlert: false,
       alertVariant: "bg-blue-500",
       alertMessage: "Submitting your comment, please wait...",
-    };
-  },
+    });
 
-  async created() {
-    const songDoc = await songsCollection
-      .doc(this.$route.params.id as string)
-      .get();
-
-    // Firebase doesn't throw error if doc is deleted
-    if (!songDoc.exists) return this.$router.push({ name: "Home" });
-
-    this.song = { id: songDoc.id, ...(songDoc.data() as Song) };
-
-    this.sort = (this.$route.query.sort as Sort | undefined) ?? "DESC";
-
-    this.listComments();
-  },
-
-  // Replace `created` lifecycle method with `beforeRouteEnter` route guard if we want to have all the data available when the page loads
-  // async beforeRouteEnter(to, from, next) {
-  //   const songDoc = await songsCollection.doc(to.params.id as string).get();
-
-  //   next((vm) => {
-  //     // The callback is run after the component has loaded after route change
-  //     // vm argument is the context of the component, same to `this`
-
-  //     // Firebase doesn't throw error if doc is deleted
-  //     if (!songDoc.exists) return vm.$router.push({ name: "Home" });
-
-  //     vm.song = { id: songDoc.id, ...(songDoc.data() as Song) };
-
-  //     vm.sort = (vm.$route.query.sort as Sort | undefined) ?? "DESC";
-
-  //     vm.listComments();
-  //   });
-  // },
-
-  watch: {
-    sort(newValue: Sort) {
-      if (newValue === this.$route.query.sort) return;
-
-      this.$router.push({
-        query: { sort: newValue },
-      });
-    },
-  },
-
-  computed: {
-    ...mapState({
-      userLoggedIn: (state) => (state as State).auth.userLoggedIn,
-    }),
-
-    ...mapGetters("player", ["isSongPlaying"]),
-
-    sortedComments(): CommentWithId[] {
-      return this.comments.slice().sort((a, b) => {
-        if (this.sort === "DESC") {
-          return (
-            Number(new Date(b.datePosted)) - Number(new Date(a.datePosted))
-          );
-        }
-        return Number(new Date(a.datePosted)) - Number(new Date(b.datePosted));
-      });
-    },
-  },
-
-  methods: {
-    ...mapActions("player", ["playNewSong", "toggleAudio"]),
-
-    async listComments() {
+    // Methods
+    const listComments = async () => {
       const snapshots = await commentsCollections
-        .where("sid", "==", this.$route.params.id as string)
+        .where("sid", "==", route.params.id as string)
         .get();
 
-      this.comments = [];
+      state.comments = [];
 
       snapshots.forEach((doc) =>
-        this.comments.push({ id: doc.id, ...(doc.data() as Comment) })
+        state.comments.push({ id: doc.id, ...(doc.data() as Comment) })
       );
-    },
+    };
 
-    async handleSubmitComment(
+    const handleSubmitComment = async (
       values: { comment: string },
       context: FormContext
-    ) {
-      if (!this.song) return;
+    ) => {
+      if (!state.song) return;
 
-      this.submissionInProgress = true;
-      this.showAlert = true;
-      this.alertVariant = "bg-blue-500";
-      this.alertMessage = "Submitting your comment, please wait...";
+      state.submissionInProgress = true;
+      state.showAlert = true;
+      state.alertVariant = "bg-blue-500";
+      state.alertMessage = "Submitting your comment, please wait...";
 
       const comment = {
         content: values.comment,
         datePosted: new Date().toString(),
-        sid: this.$route.params.id as string,
+        sid: route.params.id as string,
         name: auth.currentUser?.displayName || "Unknown user",
         uid: auth.currentUser?.uid || "Unknown user id",
       };
@@ -254,25 +207,90 @@ export default defineComponent({
         context.resetForm();
 
         // Increment the comment count
-        this.song.commentCount += 1;
+        state.song.commentCount += 1;
         songsCollection
-          .doc(this.song.id)
-          .update({ commentCount: this.song.commentCount });
+          .doc(state.song.id)
+          .update({ commentCount: state.song.commentCount });
 
         // List latest comments
-        this.listComments();
+        listComments();
 
-        this.submissionInProgress = false;
-        this.showAlert = true;
-        this.alertVariant = "bg-green-500";
-        this.alertMessage = "Your comment is successfully submitted.";
+        state.submissionInProgress = false;
+        state.showAlert = true;
+        state.alertVariant = "bg-green-500";
+        state.alertMessage = "Your comment is successfully submitted.";
       } catch (error) {
-        this.submissionInProgress = false;
-        this.showAlert = true;
-        this.alertVariant = "bg-red-500";
-        this.alertMessage = "Something went wrong, please try again later.";
+        state.submissionInProgress = false;
+        state.showAlert = true;
+        state.alertVariant = "bg-red-500";
+        state.alertMessage = "Something went wrong, please try again later.";
       }
-    },
+    };
+
+    const created = async () => {
+      const songDoc = await songsCollection
+        .doc(route.params.id as string)
+        .get();
+
+      // Firebase doesn't throw error if doc is deleted
+      if (!songDoc.exists) return router.push({ name: "Home" });
+
+      state.song = { id: songDoc.id, ...(songDoc.data() as Song) };
+
+      state.sort = (route.query.sort as Sort | undefined) ?? "DESC";
+
+      listComments();
+    };
+    created();
+
+    // computed
+    const sortedComments = computed(() => {
+      return state.comments.slice().sort((a, b) => {
+        if (state.sort === "DESC") {
+          return (
+            Number(new Date(b.datePosted)) - Number(new Date(a.datePosted))
+          );
+        }
+        return Number(new Date(a.datePosted)) - Number(new Date(b.datePosted));
+      });
+    });
+
+    watchEffect(() => {
+      if (state.sort === route.query.sort) return;
+      router.push({
+        query: { sort: state.sort },
+      });
+    });
+
+    const store = useStore();
+    const userLoggedIn = computed(() => store.state.auth.userLoggedIn);
+
+    const isSongPlaying = computed<boolean>(
+      () => store.getters["player/isSongPlaying"]
+    );
+
+    const playNewSong = (song: SongWithId | null) => {
+      if (!song) return;
+      store.dispatch("player/playNewSong", song);
+    };
+
+    const toggleAudio = () => store.dispatch("player/toggleAudio");
+
+    return {
+      handleSubmitComment,
+      sortedComments,
+
+      // State
+      ...toRefs(state),
+      userLoggedIn,
+
+      // Getter
+      isSongPlaying,
+
+      // Actions
+      playNewSong,
+      toggleAudio,
+    };
   },
 });
 </script>

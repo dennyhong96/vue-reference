@@ -13,6 +13,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { useStore } from "vuex";
 
 import AppHeader from "@/components/AppHeader.vue";
 import AuthModal from "@/components/AuthModal.vue";
@@ -27,8 +28,9 @@ export default defineComponent({
     Player,
   },
 
-  created() {
-    this.$store.dispatch("auth/initLogin");
+  setup() {
+    const store = useStore();
+    store.dispatch("auth/initLogin");
   },
 });
 </script>

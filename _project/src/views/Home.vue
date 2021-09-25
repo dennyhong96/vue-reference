@@ -47,12 +47,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, toRefs, onBeforeUnmount } from "vue";
 
+import iconSecondary from "@/directives/iconSecondary";
 import SongItem from "@/components/SongItem.vue";
 import { songsCollection } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
-import iconSecondary from "@/directives/iconSecondary";
+
+interface HomeState {
+  songs: SongWithId[];
+  numSongsPerPage: number;
+  requestPending: boolean;
+}
 
 export default defineComponent({
   name: "Home",
@@ -61,55 +67,54 @@ export default defineComponent({
     SongItem,
   },
 
-  data() {
-    return {
-      songs: [] as SongWithId[],
+  setup() {
+    const state = reactive<HomeState>({
+      songs: [],
       numSongsPerPage: 25,
       requestPending: false,
-    };
-  },
+    });
 
-  methods: {
-    async listSongs() {
-      if (this.requestPending) return; // Prevent triggering request multiple times in parallel, resulting in inconsist results
-      this.requestPending = true;
+    const listSongs = async () => {
+      if (state.requestPending) return; // Prevent triggering request multiple times in parallel, resulting in inconsist results
+      state.requestPending = true;
 
+      // Limit
       let query = songsCollection
         .orderBy("modifiedName")
-        .limit(this.numSongsPerPage);
+        .limit(state.numSongsPerPage);
 
-      if (this.songs.length) {
+      // Offset
+      if (state.songs.length) {
         const lastDoc = await songsCollection
-          .doc(this.songs[this.songs.length - 1]?.id)
+          .doc(state.songs[state.songs.length - 1]?.id)
           .get();
         query = query.startAfter(lastDoc);
       }
 
       const songsSnapshot = await query.get();
       songsSnapshot.forEach((doc) =>
-        this.songs.push({ id: doc.id, ...(doc.data() as Song) })
+        state.songs.push({ id: doc.id, ...(doc.data() as Song) })
       );
 
-      this.requestPending = false;
-    },
+      state.requestPending = false;
+    };
 
-    handleScroll() {
+    const handleScroll = () => {
       const { scrollTop, offsetHeight } = document.documentElement;
       const { innerHeight } = window;
       const isScrolledToBottom =
         Math.ceil(scrollTop) + innerHeight >= offsetHeight;
       if (!isScrolledToBottom) return;
-      this.listSongs();
-    },
-  },
+      listSongs();
+    };
 
-  created() {
-    this.listSongs();
-    window.addEventListener("scroll", this.handleScroll);
-  },
+    listSongs();
+    window.addEventListener("scroll", handleScroll);
+    onBeforeUnmount(() => {
+      window.removeEventListener("scroll", handleScroll);
+    });
 
-  beforeUnmount() {
-    window.removeEventListener("scroll", this.handleScroll);
+    return toRefs(state);
   },
 
   // Register directives locally

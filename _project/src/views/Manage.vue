@@ -34,13 +34,18 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, reactive, toRefs } from "vue";
+import { onBeforeRouteLeave } from "vue-router";
 
 import Upload from "@/components/Upload.vue";
 import CompositionItem from "@/components/CompositionItem.vue";
 import { auth, songsCollection } from "@/includes/firebase";
 import { Song, SongWithId } from "@/types/Song";
-// import store from "@/store";
+
+interface ManageState {
+  songs: SongWithId[];
+  hasUnsavedForm: boolean;
+}
 
 export default defineComponent({
   name: "Manage",
@@ -50,89 +55,70 @@ export default defineComponent({
     CompositionItem,
   },
 
-  data() {
-    return {
-      songs: [] as SongWithId[],
+  setup() {
+    const state = reactive<ManageState>({
+      songs: [],
       hasUnsavedForm: false,
+    });
+
+    // Methods
+    const handleCreateLocalSong = (newSong: SongWithId) => {
+      state.songs.push(newSong);
     };
-  },
 
-  // Vue will not await for the async created() before mounting the component, however, not a big deal here.
-  async created() {
-    const songsSnapshot = await songsCollection
-      .where("uid", "==", auth.currentUser?.uid)
-      .get();
-
-    for (const songDoc of songsSnapshot.docs) {
-      this.handleCreateLocalSong({
-        id: songDoc.id,
-        ...(songDoc.data() as Song),
-      });
-    }
-  },
-
-  // Prevent from navigating away if user is currently updating a song
-  beforeRouteLeave(to, from, next) {
-    let navigate = true;
-
-    if (this.hasUnsavedForm) {
-      navigate = confirm(
-        "You have unsaved changes, are you sure you want to leave this screen?"
-      );
-    }
-
-    next(navigate);
-  },
-
-  methods: {
-    handleCreateLocalSong(newSong: SongWithId) {
-      this.songs.push(newSong);
-    },
-
-    handleUpdateLocalSongs({
+    const handleUpdateLocalSongs = ({
       id,
       modifiedName,
       genre,
-    }: Pick<SongWithId, "id" | "modifiedName" | "genre">) {
-      this.songs = this.songs.map((song) =>
+    }: Pick<SongWithId, "id" | "modifiedName" | "genre">) => {
+      state.songs = state.songs.map((song) =>
         song.id === id ? { ...song, modifiedName: modifiedName, genre } : song
       );
-    },
+    };
 
-    handleDeleteLocalSong(id: string) {
-      this.songs = this.songs.filter((song) => song.id !== id);
-    },
+    const handleDeleteLocalSong = (id: string) => {
+      state.songs = state.songs.filter((song) => song.id !== id);
+    };
 
-    handleUpdateHasUnsavedForm(value: boolean) {
-      this.hasUnsavedForm = value;
-    },
+    const handleUpdateHasUnsavedForm = (value: boolean) => {
+      state.hasUnsavedForm = value;
+    };
+
+    const created = async () => {
+      const songsSnapshot = await songsCollection
+        .where("uid", "==", auth.currentUser?.uid)
+        .get();
+
+      for (const songDoc of songsSnapshot.docs) {
+        handleCreateLocalSong({
+          id: songDoc.id,
+          ...(songDoc.data() as Song),
+        });
+      }
+    };
+    created();
+
+    // Prevent from navigating away if user is currently updating a song
+    onBeforeRouteLeave((to, from, next) => {
+      let navigate = true;
+
+      if (state.hasUnsavedForm) {
+        navigate = confirm(
+          "You have unsaved changes, are you sure you want to leave this screen?"
+        );
+      }
+
+      next(navigate);
+    });
+
+    return {
+      handleCreateLocalSong,
+      handleUpdateLocalSongs,
+      handleDeleteLocalSong,
+      handleUpdateHasUnsavedForm,
+
+      ...toRefs(state),
+    };
   },
-
-  // Use beforeRouteLeave() route guard to unsubscribe/cancel long living tasks
-  // beforeRouteLeave(to, from, next) {
-  //   // Cancel unfinished files uploads before navigating away from the route
-  //   // Use a ref for <Upload /> component instance and access the component's cancelUploads() method
-  //   (this.$refs.uploadComponentRef as {
-  //     cancelUploads: () => void;
-  //   }).cancelUploads();
-
-  //   next();
-  // },
-
-  // Local route guard, ran before rendering component
-  // beforeRouteEnter(to, from, next) {
-  //   console.log("Manage beforeRouteEnter", { to });
-  //   console.log("Manage beforeRouteEnter", { from });
-
-  //   // cannot access this.$store because this points to the component which is not created yet
-  //   // import the store directly and use it that way
-  //   if (!store.state.userLoggedIn) {
-  //     return next({ name: "Home" }); // redirect to Home
-  //   }
-
-  //   // Component is not created until next() is called
-  //   // So can't access data, methods, etc
-  //   next();
-  // },
 });
 </script>
