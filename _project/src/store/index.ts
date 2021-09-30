@@ -1,8 +1,11 @@
 import { createStore } from "vuex";
 import { Howl } from "howler";
+import { InjectionKey } from "vue";
 
 import modules from "@/store/modules";
 import { SongWithId } from "@/types/Song";
+
+export const storeKey: InjectionKey<AppStore> = Symbol();
 
 export interface AuthState {
   authModalShow: boolean;

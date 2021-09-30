@@ -1,7 +1,6 @@
 import { computed, ComputedRef } from "vue";
-import { useStore } from "vuex";
 
-import { State } from "@/store";
+import useStore from "@/composables/useStore";
 import { LoginFormFields, RegisterFormFields } from "@/store/modules/auth";
 
 const useAuth: () => {
@@ -13,7 +12,7 @@ const useAuth: () => {
   signOut: () => Promise<void>;
   toggleAuthModal: () => void;
 } = () => {
-  const store = useStore<State>();
+  const store = useStore();
 
   // State
   const authModalShow = computed(() => store.state.auth.authModalShow);

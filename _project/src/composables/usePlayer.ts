@@ -1,8 +1,7 @@
 import { computed, ComputedRef } from "vue";
-import { useStore } from "vuex";
 import { Howl } from "howler";
 
-import { State } from "@/store";
+import useStore from "@/composables/useStore";
 import { SongWithId } from "@/types/Song";
 
 const usePlayer: () => {
@@ -16,7 +15,7 @@ const usePlayer: () => {
   toggleAudio: () => void;
   updateSeek: (evt: MouseEvent) => void;
 } = () => {
-  const store = useStore<State>();
+  const store = useStore();
 
   // State
   const currentSong = computed(() => store.state.player.currentSong);

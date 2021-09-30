@@ -2,7 +2,7 @@ import { createApp, App as TApp } from "vue";
 
 import App from "@/App.vue";
 import router from "@/router";
-import store from "@/store";
+import store, { storeKey } from "@/store";
 import i18n from "@/includes/i18n";
 import VeeValidatePlugin from "@/includes/validation";
 import globalComponentsPlugin from "@/includes/_globals";
@@ -29,7 +29,7 @@ auth.onAuthStateChanged(() => {
   console.log("createApp(App)");
 
   // plugins must be used before mounting the app
-  app.use(store);
+  app.use(store, storeKey);
   app.use(router);
   app.use(VeeValidatePlugin, { foo: 5 });
   app.use(i18n);
