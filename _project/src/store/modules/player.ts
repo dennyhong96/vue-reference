@@ -1,4 +1,4 @@
-import { ActionContext } from "vuex";
+import { ActionContext, Module } from "vuex";
 import { Howl } from "howler";
 
 import { PlayerState, State } from "..";
@@ -117,10 +117,12 @@ const mutations = {
   },
 };
 
-export default {
+const playerModule: Module<PlayerState, State> = {
   namespaced: true,
   state,
   getters,
   actions,
   mutations,
 };
+
+export default playerModule;

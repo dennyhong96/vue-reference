@@ -14,8 +14,11 @@
         <!-- Primary Navigation -->
         <ul class="flex flex-row mt-1">
           <li>
-            <router-link :to="{ name: 'About' }" class="px-2 text-white"
-              >About</router-link
+            <AppLink
+              :to="{ name: 'About' }"
+              class="px-2 text-white"
+              activeClass="text-yellow-500"
+              >About</AppLink
             >
           </li>
 
@@ -27,10 +30,24 @@
           </li>
           <template v-else>
             <li>
-              <router-link :to="{ name: 'Manage' }" class="px-2 text-white"
-                >Manage</router-link
+              <AppLink
+                :to="{ name: 'Manage' }"
+                class="px-2 text-white"
+                activeClass="text-yellow-500"
+                >Manage</AppLink
               >
             </li>
+
+            <!-- Use AppLink for both internal and external link -->
+            <!-- <li>
+              <AppLink
+                to="https://google.com"
+                class="px-2 text-white"
+                activeClass="text-yellow-500"
+                >Google</AppLink
+              >
+            </li> -->
+
             <li>
               <a class="px-2 text-white" @click.prevent="signOut" href="#"
                 >Logout</a
@@ -57,15 +74,21 @@
 </template>
 
 <script lang="ts">
-import useAuth from "@/composables/useAuth";
-import { defineComponent, WritableComputedRef } from "vue";
+import { defineComponent, ref, WritableComputedRef } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
+
+import useAuth from "@/composables/useAuth";
+import AppLink from "@/components/AppLink.vue";
 
 type Locale = "en" | "zh" | "fr";
 
 export default defineComponent({
   name: "AppHeader",
+
+  components: {
+    AppLink,
+  },
 
   setup() {
     const { locale } = useI18n();

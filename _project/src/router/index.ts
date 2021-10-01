@@ -33,10 +33,9 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }, // assign custom key values to route meta field
 
     // Local route guard, can also define this within the view component
-    // beforeEnter(to, from, next) {
+    // beforeEnter(to, from) {
     //   console.log("/manage-music beforeEnter", { to });
     //   console.log("/manage-music beforeEnter", { from });
-    //   next();
     // },
   },
   {
@@ -49,6 +48,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/songs/:id",
     name: "Song",
     component: Song,
+    meta: { preserveQuery: true },
   },
   {
     path: "/:catchAll(.*)*", // Vue router try to match the catch-all route last, prioritize other matches
@@ -61,25 +61,45 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-  linkExactActiveClass: "text-yellow-500", // Set styles for active <router-link />
+  // linkExactActiveClass: "text-yellow-500", // Set styles for active <router-link />
   // linkActiveClass: "text-yellow-500",
+  scrollBehavior(to, from, savedPosition) {
+    // Return a promise to delay the scroll, wait for route transition to finish
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        if (to.hash) resolve({ el: to.hash, behavior: "smooth" });
+        if (savedPosition) resolve({ ...savedPosition, behavior: "smooth" });
+        resolve({ top: 0, behavior: "smooth" });
+      }, 500);
+    });
+  },
 });
 
 // Global route guard
 // Global route guard ran first, than beforeEnter in the routes config, than beforeRouteEnter in the route component
-router.beforeEach((to, from, next) => {
-  console.log("router.beforeEach()", { to });
-  console.log("router.beforeEach()", { from });
+router.beforeEach((to, from) => {
+  // console.log("router.beforeEach()", { to });
+  // console.log("router.beforeEach()", { from });
 
   // Redirect to home is route is protected but user is not logged in
   if (
-    to.matched.some((matchedRoute) => !!matchedRoute.meta.requiresAuth) &&
+    // to.matched.some((matchedRoute) => !!matchedRoute.meta.requiresAuth) &&
+    // !store.state.auth.userLoggedIn
+    to.meta.requiresAuth &&
     !store.state.auth.userLoggedIn
   ) {
-    return next({ name: "Home" });
+    // return false; // return false to cancel the navigation
+    return { name: "Home" }; // Redirect to home
   }
+});
 
-  next();
+// Remove query from url when for new route
+router.afterEach((to, from) => {
+  if (!to.meta.preserveQuery) {
+    if (Object.keys(to.query).length) {
+      router.replace({ query: {} });
+    }
+  }
 });
 
 export default router;

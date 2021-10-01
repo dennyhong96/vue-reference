@@ -112,7 +112,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, watchEffect, toRefs } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
 import { FormContext } from "vee-validate";
 
 import {
@@ -258,8 +258,9 @@ export default defineComponent({
 
     watchEffect(() => {
       if (state.sort === route.query.sort) return;
-      router.push({
+      router.replace({
         query: { sort: state.sort },
+        hash: route.hash, // Must specify hash manually, otherwise hash is lost
       });
     });
 

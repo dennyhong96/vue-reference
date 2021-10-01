@@ -1,4 +1,7 @@
 import _ from "lodash";
+import { ModuleTree } from "vuex";
+
+import { State } from "..";
 
 // Automatically register vuex modules
 const requireModule = require.context(".", true, /\.ts$/i);
@@ -19,4 +22,4 @@ requireModule.keys().forEach((fileName) => {
   modules[moduleName] = moduleConfig.default ?? moduleConfig;
 });
 
-export default modules;
+export default modules as ModuleTree<State>;

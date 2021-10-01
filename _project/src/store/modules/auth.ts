@@ -1,5 +1,5 @@
 import { auth, usersCollection } from "@/includes/firebase";
-import { ActionContext } from "vuex";
+import { ActionContext, Module } from "vuex";
 
 import { AuthState, State } from "..";
 
@@ -87,10 +87,12 @@ const mutations = {
   },
 };
 
-export default {
+const authModule: Module<AuthState, State> = {
   namespaced: true, // This namespaces getters, actions, and mutations (state is automatically namespaced by default)
   state,
   getters,
   actions,
   mutations,
 };
+
+export default authModule;

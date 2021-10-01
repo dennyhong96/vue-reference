@@ -99,7 +99,7 @@ export default defineComponent({
     created();
 
     // Prevent from navigating away if user is currently updating a song
-    onBeforeRouteLeave((to, from, next) => {
+    onBeforeRouteLeave((to, from) => {
       let navigate = true;
 
       if (state.hasUnsavedForm) {
@@ -108,7 +108,7 @@ export default defineComponent({
         );
       }
 
-      next(navigate);
+      if (!navigate) return false;
     });
 
     return {
