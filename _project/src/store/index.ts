@@ -1,4 +1,4 @@
-import { createStore } from "vuex";
+import { createStore, createLogger } from "vuex";
 import { Howl } from "howler";
 import { InjectionKey } from "vue";
 
@@ -32,6 +32,10 @@ export interface State {
 
 export type AppStore = typeof store;
 
-const store = createStore<State>({ modules });
+const store = createStore<State>({
+  modules,
+  plugins: process.env.NODE_ENV === "production" ? [] : [createLogger()],
+  strict: process.env.NODE_ENV !== "production",
+});
 
 export default store;

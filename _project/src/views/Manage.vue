@@ -84,7 +84,7 @@ export default defineComponent({
       state.hasUnsavedForm = value;
     };
 
-    const created = async () => {
+    const listMySongs = async () => {
       const songsSnapshot = await songsCollection
         .where("uid", "==", auth.currentUser?.uid)
         .get();
@@ -96,7 +96,7 @@ export default defineComponent({
         });
       }
     };
-    created();
+    listMySongs();
 
     // Prevent from navigating away if user is currently updating a song
     onBeforeRouteLeave((to, from) => {

@@ -1,6 +1,6 @@
-import { auth, usersCollection } from "@/includes/firebase";
 import { ActionContext, Module } from "vuex";
 
+import { auth, usersCollection } from "@/includes/firebase";
 import { AuthState, State } from "..";
 
 export interface RegisterFormFields {

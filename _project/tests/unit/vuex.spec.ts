@@ -17,6 +17,8 @@ jest.mock("@/includes/firebase", () => ({
 
 describe("VueX Store", () => {
   test("toggleAuthentication mutation sets userLoggedIn to true", () => {
+    expect.assertions(2);
+
     const store = createStore({ modules: { auth: _.cloneDeep(auth) } }); // Use cloneDeep to avoid state from leaking between tests
 
     expect(store.state.auth.userLoggedIn).toBe(false);
@@ -49,12 +51,14 @@ describe("VueX Store", () => {
       playerProgress: "0%",
     };
 
-    const result = player.getters.isSongPlaying(mockState);
+    // @ts-ignore
+    const result = player.getters!.isSongPlaying(mockState);
     expect(result).toBe(true);
 
     mockState.sound.playing = () => false;
 
-    const result2 = player.getters.isSongPlaying(mockState);
+    // @ts-ignore
+    const result2 = player.getters!.isSongPlaying(mockState);
     expect(result2).toBe(false);
   });
 });

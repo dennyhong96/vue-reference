@@ -33,10 +33,10 @@ const routes: Array<RouteRecordRaw> = [
     meta: { requiresAuth: true }, // assign custom key values to route meta field
 
     // Local route guard, can also define this within the view component
-    // beforeEnter(to, from) {
-    //   console.log("/manage-music beforeEnter", { to });
-    //   console.log("/manage-music beforeEnter", { from });
-    // },
+    beforeEnter(to, from) {
+      console.log("/manage-music beforeEnter", { to });
+      console.log("/manage-music beforeEnter", { from });
+    },
   },
   {
     path: "/manage",
@@ -61,8 +61,11 @@ const routes: Array<RouteRecordRaw> = [
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
-  // linkExactActiveClass: "text-yellow-500", // Set styles for active <router-link />
+
+  // Set styles for active <router-link />
   // linkActiveClass: "text-yellow-500",
+  // linkExactActiveClass: "text-yellow-500",
+
   scrollBehavior(to, from, savedPosition) {
     // Return a promise to delay the scroll, wait for route transition to finish
     return new Promise((resolve) => {
@@ -75,12 +78,9 @@ const router = createRouter({
   },
 });
 
-// Global route guard
+// Global route guards
 // Global route guard ran first, than beforeEnter in the routes config, than beforeRouteEnter in the route component
 router.beforeEach((to, from) => {
-  // console.log("router.beforeEach()", { to });
-  // console.log("router.beforeEach()", { from });
-
   // Redirect to home is route is protected but user is not logged in
   if (
     // to.matched.some((matchedRoute) => !!matchedRoute.meta.requiresAuth) &&

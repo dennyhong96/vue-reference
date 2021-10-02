@@ -3,11 +3,10 @@
   <header id="header" class="bg-gray-700">
     <nav class="container mx-auto flex justify-start items-center py-5 px-4">
       <!-- App Name -->
-      <router-link
-        exact-active-class="no-active-styles"
+      <AppLink
         :to="{ name: 'Home' }"
         class="text-white font-bold uppercase text-2xl mr-4"
-        >Music</router-link
+        >Music</AppLink
       >
 
       <div class="flex flex-grow items-center">
