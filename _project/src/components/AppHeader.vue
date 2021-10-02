@@ -59,8 +59,7 @@
           <select
             class="py-1 px-2 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
-            :value="currentLocale"
-            @change="handleChangeLocale"
+            v-model="locale"
           >
             <option value="en">🇺🇸 English</option>
             <option value="fr">🇹🇫 French</option>
@@ -73,7 +72,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, WritableComputedRef } from "vue";
+import { defineComponent, WritableComputedRef } from "vue";
 import { useI18n } from "vue-i18n";
 import { useRoute, useRouter } from "vue-router";
 
@@ -97,9 +96,6 @@ export default defineComponent({
 
     const { userLoggedIn, toggleAuthModal, signOut: signOutAction } = useAuth();
 
-    const handleChangeLocale = (evt: Event) =>
-      (locale.value = (evt.target as HTMLInputElement).value);
-
     const signOut = async () => {
       await signOutAction();
       if (!route.meta.requiresAuth) return;
@@ -107,9 +103,8 @@ export default defineComponent({
     };
 
     return {
-      currentLocale: locale as WritableComputedRef<Locale>,
+      locale: locale as WritableComputedRef<Locale>,
 
-      handleChangeLocale,
       signOut,
 
       // State
