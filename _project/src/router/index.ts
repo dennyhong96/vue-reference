@@ -2,13 +2,11 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 
 import store from "@/store";
 
-// route level code-splitting
-// this generates a separate chunk (home.[hash].js) for this route
-// which is lazy-loaded when the route is visited.
-const Home = () => import(/* webpackChunkName: "home" */ "@/views/Home.vue");
+// route level code-splitting, lazy-loaded when the route is visited.
+const Home = () => import(/* webpackChunkName: "home" */ "@/views/Home.vue"); // this generates a separate chunk (home.[hash].js) for this route
 const About = () => import(/* webpackChunkName: "about" */ "@/views/About.vue");
 
-// Grouping frequently viewed together routes as a single chunk - assign the same chunk name
+// Grouping frequently viewed together routes as a single chunk - assign the SAME chunk name
 const Manage = () =>
   import(/* webpackChunkName: "groupedChunk" */ "@/views/Manage.vue");
 const Song = () =>

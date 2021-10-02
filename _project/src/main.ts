@@ -5,9 +5,9 @@ import router from "@/router";
 import store, { storeKey } from "@/store";
 import i18n from "@/includes/i18n";
 import VeeValidatePlugin from "@/includes/validation";
-import globalComponentsPlugin from "@/includes/_globals";
-import progressBar from "@/includes/progressBar";
+import registerGlobalComponentsPlugin from "@/includes/_globals";
 import { auth } from "@/includes/firebase";
+import createProgressBar from "@/includes/progressBar";
 import iconDirective from "@/directives/icon";
 import clickOutside from "@/directives/clickOutside";
 import "@/assets/tailwind.css";
@@ -16,7 +16,7 @@ import "nprogress/nprogress.css";
 import "@/registerServiceWorker";
 
 // route change progress bar
-progressBar(router);
+createProgressBar(router);
 
 let app: TApp<Element>;
 
@@ -36,7 +36,7 @@ auth.onAuthStateChanged(() => {
   app.use(i18n);
 
   // Automatically register common components globally
-  app.use(globalComponentsPlugin);
+  app.use(registerGlobalComponentsPlugin);
 
   // Directives
   app.directive("icon", iconDirective);

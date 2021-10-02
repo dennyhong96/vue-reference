@@ -112,7 +112,7 @@
 
 <script lang="ts">
 import { defineComponent, reactive, computed, watchEffect, toRefs } from "vue";
-import { onBeforeRouteLeave, useRoute, useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { FormContext } from "vee-validate";
 
 import {
@@ -197,6 +197,8 @@ export default defineComponent({
         name: auth.currentUser?.displayName || "Unknown user",
         uid: auth.currentUser?.uid || "Unknown user id",
       };
+
+      console.log({ comment });
 
       const commentId = commentsCollections.doc().id;
       try {

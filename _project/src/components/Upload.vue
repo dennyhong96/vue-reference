@@ -107,7 +107,7 @@ export default defineComponent({
 
         // Throw error if the user does NOT have connection to the internet (Cached PWA Mode)
         if (!navigator.onLine) {
-          state.uploads.push({
+          return state.uploads.push({
             songId,
             task: {} as firebase.storage.UploadTask,
             currentProgress: 100,
@@ -116,8 +116,6 @@ export default defineComponent({
             icon: "fas fa-times",
             textClass: "text-red-400",
           });
-
-          return;
         }
 
         state.uploads.push({
@@ -165,7 +163,7 @@ export default defineComponent({
               modifiedName: uploadTask.snapshot.ref.name,
               genre: "",
               commentCount: 0,
-              url: (await uploadTask.snapshot.ref.getDownloadURL()) as string,
+              url: await uploadTask.snapshot.ref.getDownloadURL(),
             };
 
             // Add new song data to DB

@@ -35,7 +35,7 @@ export type AppStore = typeof store;
 const store = createStore<State>({
   modules,
   plugins: process.env.NODE_ENV === "production" ? [] : [createLogger()],
-  strict: process.env.NODE_ENV !== "production",
+  // strict: process.env.NODE_ENV !== "production",
 });
 
 export default store;

@@ -1,5 +1,5 @@
-import _ from "lodash";
 import { Plugin } from "vue";
+import _ from "lodash";
 
 // Automatically register all common components globally
 const globalComponentsPlugin: Plugin = {
@@ -11,6 +11,8 @@ const globalComponentsPlugin: Plugin = {
     );
 
     commonComponents.keys().forEach((fileName) => {
+      // When commonComponents is used as a function and passed in a filename,
+      // it will take care of importing the component
       const componentConfig = commonComponents(fileName);
 
       // Derive component name from filename. e.g. './Button.vue' -> 'Button', './Alert.vue' -> 'Alert'
@@ -27,7 +29,7 @@ const globalComponentsPlugin: Plugin = {
 
       app.component(
         `App${componentName}`, // Prefix component names to avoid conflict
-        componentConfig.default ?? componentConfig // Account for both default export or named export
+        componentConfig.default ?? componentConfig // Account for both default export and named export
       );
     });
   },
