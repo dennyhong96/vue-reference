@@ -9,6 +9,7 @@ import globalComponentsPlugin from "@/includes/_globals";
 import progressBar from "@/includes/progressBar";
 import { auth } from "@/includes/firebase";
 import iconDirective from "@/directives/icon";
+import clickOutside from "@/directives/clickOutside";
 import "@/assets/tailwind.css";
 import "@/assets/main.css";
 import "nprogress/nprogress.css";
@@ -39,6 +40,7 @@ auth.onAuthStateChanged(() => {
 
   // Directives
   app.directive("icon", iconDirective);
+  app.directive("click-outside", clickOutside);
 
   app.mount("#app");
 });
