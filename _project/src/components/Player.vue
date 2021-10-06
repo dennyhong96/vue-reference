@@ -68,13 +68,23 @@
 
 <script lang="ts">
 import usePlayer from "@/composables/usePlayer";
-import { defineComponent } from "vue";
+import { defineComponent, inject, onMounted, Ref } from "vue";
 
 export default defineComponent({
   name: "Player",
 
   setup() {
+    // Provide & Inject
+    const myComputed = inject<Ref<number>>("myComputed")!;
+    onMounted(() => {
+      setTimeout(() => {
+        myComputed.value = 2;
+      }, 5000);
+    });
+
     return { ...usePlayer() };
   },
+
+  // inject: ["myComputed"],
 });
 </script>

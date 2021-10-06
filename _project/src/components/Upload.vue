@@ -52,6 +52,7 @@ import {
   PropType,
   reactive,
   toRefs,
+  defineExpose,
 } from "vue";
 
 import { Song, SongWithId } from "@/types/Song";
@@ -192,8 +193,13 @@ export default defineComponent({
     };
     onBeforeUnmount(cancelUploads);
 
+    const logFromUpload = () => {
+      console.log("logFromUpload");
+    };
+
     return {
       handleUpload,
+      logFromUpload,
 
       ...toRefs(state),
     };

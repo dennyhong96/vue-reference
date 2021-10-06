@@ -34,7 +34,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, reactive, toRefs } from "vue";
+import { defineComponent, onMounted, reactive, ref, toRefs } from "vue";
 import { onBeforeRouteLeave } from "vue-router";
 
 import Upload from "@/components/Upload.vue";
@@ -55,7 +55,7 @@ export default defineComponent({
     CompositionItem,
   },
 
-  setup() {
+  setup(props, context) {
     const state = reactive<ManageState>({
       songs: [],
       hasUnsavedForm: false,
@@ -111,7 +111,16 @@ export default defineComponent({
       if (!navigate) return false;
     });
 
+    // Proper typing for Component Template Ref - InstanceType<typeof Component>
+    // const uploadComponentRef = ref<InstanceType<typeof Upload>>();
+    // onMounted(() => {
+    //   console.log(uploadComponentRef.value);
+    //   uploadComponentRef.value?.logFromUpload();
+    // });
+
     return {
+      // uploadComponentRef,
+
       handleCreateLocalSong,
       handleUpdateLocalSongs,
       handleDeleteLocalSong,

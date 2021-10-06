@@ -42,5 +42,102 @@ auth.onAuthStateChanged(() => {
   app.directive("icon", iconDirective);
   app.directive("click-outside", clickOutside);
 
+  // Globle Error Handler
+  app.config.errorHandler = (error) => {
+    console.error("app.config.errorHandler", error);
+  };
+
   app.mount("#app");
 });
+
+// Render function
+// import {
+//   createApp,
+//   h,
+//   resolveDynamicComponent,
+//   withDirectives,
+//   // Default Components
+//   KeepAlive,
+//   Transition,
+//   TransitionGroup,
+//   Teleport
+// } from "vue";
+
+// const testDirective = (el, binding) => {
+//   console.log({ el });
+//   console.log({ binding });
+// };
+
+// const MyInput = {
+//   props: {
+//     modelValue: {
+//       type: String,
+//       required: true
+//     }
+//   },
+//   emits: ["update:modelValue"],
+//   render() {
+//     return h("input", {
+//       value: this.modelValue,
+//       onInput: (evt) => this.$emit("update:modelValue", evt.target.value)
+//     });
+//   }
+// };
+
+// const MyHeading = {
+//   data() {
+//     return {
+//       name: "Denny"
+//     };
+//   },
+//   render() {
+//     return withDirectives(
+//       h(
+//         "h1",
+//         this.$slots.default({
+//           name: this.name
+//         })
+//       ),
+//       [[testDirective, 200, "top", { animate: true }]]
+//     );
+//   }
+// };
+
+// const app = createApp({
+//   data() {
+//     return {
+//       modelValue: ""
+//     };
+//   },
+//   render() {
+//     const Input = resolveDynamicComponent(MyInput);
+//     return [
+//       h(Input, {
+//         modelValue: this.modelValue,
+//         "onUpdate:modelValue": (newValue) => (this.modelValue = newValue)
+//       }),
+//       h(
+//         Transition,
+//         {
+//           mode: "out-in",
+//           name: "heading"
+//         },
+//         this.modelValue.length > 7
+//           ? h(MyHeading, null, {
+//               default: ({ name }) => h("span", `${name} - ${this.modelValue}`)
+//             })
+//           : ""
+//       )
+//     ];
+//   }
+// });
+
+// app.directive({
+//   test: {
+//     mounted(el) {
+//       console.log({ el });
+//     }
+//   }
+// });
+
+// app.mount("#app");

@@ -1,4 +1,4 @@
-import { App } from "vue";
+import { App, Plugin } from "vue";
 import {
   Form as VeeForm,
   Field as VeeField,
@@ -19,7 +19,7 @@ import {
 } from "@vee-validate/rules";
 
 // A custom plugin that registers VeeForm and VeeField components
-export default {
+const validationPlugin: Plugin = {
   // Before vue runs the app, it runs the install method of the plugin
   install(app: App<Element>, options: { [key: string]: any }): void {
     // Registers components globally
@@ -27,7 +27,7 @@ export default {
     app.component("VeeField", VeeField);
     app.component("ErrorMessage", ErrorMessage);
 
-    // Register rules to
+    // Register rules
 
     // Generic rules
     defineRule("required", required);
@@ -79,3 +79,5 @@ export default {
     });
   },
 };
+
+export default validationPlugin;
