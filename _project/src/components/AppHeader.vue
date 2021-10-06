@@ -23,13 +23,18 @@
 
           <!-- Navigation Links -->
           <li v-if="!userLoggedIn">
-            <a class="px-2 text-white" @click.prevent="toggleAuthModal" href="#"
+            <a
+              data-test="auth-link"
+              class="px-2 text-white"
+              @click.prevent="toggleAuthModal"
+              href="#"
               >Login / Register</a
             >
           </li>
           <template v-else>
             <li>
               <AppLink
+                data-test="manage-link"
                 :to="{ name: 'Manage' }"
                 class="px-2 text-white"
                 activeClass="text-yellow-500"

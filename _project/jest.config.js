@@ -3,4 +3,5 @@ module.exports = {
   transform: {
     "^.+\\.vue$": "vue-jest",
   },
+  setupFiles: ["<rootDir>/jest.setup.js"],
 };

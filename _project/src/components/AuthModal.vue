@@ -29,6 +29,7 @@
             <p class="text-2xl font-bold">Your Account</p>
             <!-- Modal Close Button -->
             <div
+              data-test="close-modal-button"
               @click.prevent="toggleAuthModal"
               class="modal-close cursor-pointer z-50"
             >
@@ -40,6 +41,7 @@
           <ul class="flex flex-wrap mb-4">
             <li class="flex-auto text-center">
               <a
+                data-test="login-link"
                 @click.prevent="tab = 'LOGIN'"
                 class="block rounded py-3 px-4 transition"
                 :class="{
@@ -52,6 +54,7 @@
             </li>
             <li class="flex-auto text-center">
               <a
+                data-test="register-link"
                 @click.prevent="tab = 'REGISTER'"
                 class="block rounded py-3 px-4 transition"
                 :class="{

@@ -32,9 +32,11 @@ export const db = firebase.firestore();
 // Tells firebase to keep a copy of the DB on the user's browser,
 // if the user disconnects from the internet, firebase will switch
 // to use local copy
-db.enablePersistence().catch((error) =>
-  console.error(`Firebase persistence error - ${error.code}`)
-);
+if (process.env.NODE_ENV === "production") {
+  db.enablePersistence().catch((error) =>
+    console.error(`Firebase persistence error - ${error.code}`)
+  );
+}
 
 export const usersCollection = db.collection("users");
 export const songsCollection = db.collection("songs");
