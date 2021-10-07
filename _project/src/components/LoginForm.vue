@@ -14,25 +14,31 @@
     <div class="mb-3">
       <label class="inline-block mb-2">Email</label>
       <VeeField
+        data-test="email-input"
         name="email"
         type="email"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
         placeholder="Enter Email"
       />
-      <ErrorMessage class="text-red-600" name="email" />
+      <ErrorMessage data-test="email-error" class="text-red-600" name="email" />
     </div>
     <!-- Password -->
     <div class="mb-3">
       <label class="inline-block mb-2">Password</label>
       <VeeField
+        data-test="password-input"
         name="password"
         type="password"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
         placeholder="Password"
       />
-      <ErrorMessage class="text-red-600" name="password" />
+      <ErrorMessage
+        data-test="password-error"
+        class="text-red-600"
+        name="password"
+      />
     </div>
     <button
       :disabled="loginInProgress"
