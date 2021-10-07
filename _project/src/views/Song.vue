@@ -198,8 +198,6 @@ export default defineComponent({
         uid: auth.currentUser?.uid || "Unknown user id",
       };
 
-      console.log({ comment });
-
       const commentId = commentsCollections.doc().id;
       try {
         await commentsCollections.doc(commentId).set({

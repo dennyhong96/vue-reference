@@ -7,6 +7,7 @@
   >
     <div>
       <router-link
+        data-test="song-item-link"
         :to="{ name: 'Song', params: { id: song.id } }"
         class="font-bold block text-gray-600 song-link"
         >{{ song.modifiedName }}</router-link
@@ -22,7 +23,7 @@
         :to="{ name: 'Song', params: { id: song.id }, hash: '#comments' }"
         v-slot="{ navigate }"
       >
-        <span class="comments" @click="navigate">
+        <span data-test="comments-count" class="comments" @click="navigate">
           <i class="fa fa-comments text-gray-600"></i>
           {{ song.commentCount }}
         </span>

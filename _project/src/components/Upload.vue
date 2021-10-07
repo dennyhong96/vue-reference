@@ -7,6 +7,7 @@
     <div class="p-6">
       <!-- Upload Dropbox -->
       <div
+        data-test="drop-song-box"
         @drag.prevent.stop=""
         @dragstart.prevent.stop=""
         @dragend.prevent.stop="isDraggedOver = false"
@@ -22,11 +23,21 @@
         <h5>Drop your files here</h5>
       </div>
 
-      <input type="file" multiple @change="handleUpload" />
+      <input
+        data-test="file-input"
+        type="file"
+        multiple
+        @change="handleUpload"
+      />
       <hr class="my-6" />
 
       <!-- Progess Bars -->
-      <div v-for="upload in uploads" :key="upload.songId" class="mb-4">
+      <div
+        data-test="progress-bar"
+        v-for="upload in uploads"
+        :key="upload.songId"
+        class="mb-4"
+      >
         <!-- File Name -->
         <div class="font-bold text-sm" :class="upload.textClass">
           <i :class="upload.icon"></i> {{ upload.name }}
@@ -52,7 +63,6 @@ import {
   PropType,
   reactive,
   toRefs,
-  defineExpose,
 } from "vue";
 
 import { Song, SongWithId } from "@/types/Song";
@@ -193,13 +203,8 @@ export default defineComponent({
     };
     onBeforeUnmount(cancelUploads);
 
-    const logFromUpload = () => {
-      console.log("logFromUpload");
-    };
-
     return {
       handleUpload,
-      logFromUpload,
 
       ...toRefs(state),
     };
