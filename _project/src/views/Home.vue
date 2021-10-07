@@ -39,7 +39,12 @@
 
         <!-- Playlist -->
         <ol id="playlist">
-          <SongItem v-for="song in songs" :song="song" :key="song.id" />
+          <SongItem
+            v-for="song in songs"
+            :song="song"
+            :key="song.id"
+            :data-test="`song-item-id-${song.id}`"
+          />
         </ol>
       </div>
     </section>
