@@ -17,7 +17,6 @@ import AuthModule from "@/store/modules/auth";
 import PlayerModule from "@/store/modules/player";
 import VeeValidatePlugin from "@/includes/validation";
 import { SongWithId } from "@/types/Song";
-import { file } from "@babel/types";
 
 let mockSet = jest.fn();
 jest.mock("@/includes/firebase.ts", () => ({

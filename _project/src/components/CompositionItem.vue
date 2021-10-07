@@ -4,12 +4,14 @@
     <div v-show="!showEditForm">
       <h4 class="inline-block text-2xl font-bold">{{ song.modifiedName }}</h4>
       <button
+        data-test="delete-button"
         @click="handleDeleteSong"
         class="ml-1 py-1 px-2 text-sm rounded text-white bg-red-600 float-right"
       >
         <i class="fa fa-times"></i>
       </button>
       <button
+        data-test="edit-form-toggler"
         class="ml-1 py-1 px-2 text-sm rounded text-white bg-blue-600 float-right"
         @click.prevent="showEditForm = !showEditForm"
       >
@@ -26,6 +28,7 @@
       </div>
 
       <VeeForm
+        data-test="edit-form"
         :validation-schema="formValidationSchema"
         :initial-values="song"
         @submit="handleUpdateSong"
@@ -33,6 +36,7 @@
         <div class="mb-3">
           <label class="inline-block mb-2">Song Title</label>
           <VeeField
+            data-test="song-name-input"
             as="input"
             type="text"
             name="modifiedName"
@@ -41,11 +45,16 @@
               transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Song Title"
           />
-          <ErrorMessage class="text-red-600" name="modifiedName" />
+          <ErrorMessage
+            data-test="song-name-error"
+            class="text-red-600"
+            name="modifiedName"
+          />
         </div>
         <div class="mb-3">
           <label class="inline-block mb-2">Genre</label>
           <VeeField
+            data-test="song-genre-input"
             as="input"
             type="text"
             name="genre"
@@ -54,7 +63,11 @@
               transition duration-500 focus:outline-none focus:border-black rounded"
             placeholder="Enter Genre"
           />
-          <ErrorMessage class="text-red-600" name="genre" />
+          <ErrorMessage
+            data-test="song-genre-error"
+            class="text-red-600"
+            name="genre"
+          />
         </div>
         <button
           type="submit"
@@ -64,6 +77,7 @@
           Submit
         </button>
         <button
+          data-test="back-button"
           type="button"
           class="py-1.5 px-3 rounded text-white bg-gray-600"
           :disabled="isUpdating"
@@ -208,7 +222,5 @@ export default defineComponent({
       type: Function as PropType<(value: boolean) => void>,
     },
   },
-
-  emits: ["deleteSong"],
 });
 </script>
