@@ -20,36 +20,39 @@
     <div class="mb-3">
       <label class="inline-block mb-2">Name</label>
       <VeeField
+        data-test="name-input"
         name="name"
         type="text"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
         placeholder="Enter Name"
       />
-      <ErrorMessage class="text-red-600" name="name" />
+      <ErrorMessage data-test="name-error" class="text-red-600" name="name" />
     </div>
     <!-- Email -->
     <div class="mb-3">
       <label class="inline-block mb-2">Email</label>
       <VeeField
+        data-test="email-input"
         name="email"
         type="email"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
         placeholder="Enter Email"
       />
-      <ErrorMessage class="text-red-600" name="email" />
+      <ErrorMessage data-test="email-error" class="text-red-600" name="email" />
     </div>
     <!-- Age -->
     <div class="mb-3">
       <label class="inline-block mb-2">Age</label>
       <VeeField
+        data-test="age-input"
         name="age"
         type="number"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
       />
-      <ErrorMessage class="text-red-600" name="age" />
+      <ErrorMessage data-test="age-error" class="text-red-600" name="age" />
     </div>
     <!-- Password -->
     <div class="mb-3">
@@ -58,13 +61,19 @@
       <!-- using :bails="false", we can output multiple errors -->
       <VeeField name="password" :bails="false" v-slot="{ field, errors }">
         <input
+          data-test="password-input"
           v-bind="field"
           type="password"
           class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
           placeholder="Password"
         />
-        <div v-for="error in errors" :key="error" class="text-red-600">
+        <div
+          data-test="password-error"
+          v-for="error in errors"
+          :key="error"
+          class="text-red-600"
+        >
           {{ error }}
         </div>
       </VeeField>
@@ -73,18 +82,24 @@
     <div class="mb-3">
       <label class="inline-block mb-2">Confirm Password</label>
       <VeeField
+        data-test="confirm-password-input"
         name="confirm_password"
         type="password"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
         placeholder="Confirm Password"
       />
-      <ErrorMessage class="text-red-600" name="confirm_password" />
+      <ErrorMessage
+        data-test="confirm-password-error"
+        class="text-red-600"
+        name="confirm_password"
+      />
     </div>
     <!-- Country -->
     <div class="mb-3">
       <label class="inline-block mb-2">Country</label>
       <VeeField
+        data-test="country-input"
         as="select"
         name="country"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
@@ -95,11 +110,16 @@
         <option value="Germany">Germany</option>
         <option value="Antarctica">Antarctica</option>
       </VeeField>
-      <ErrorMessage class="text-red-600" name="country" />
+      <ErrorMessage
+        data-test="country-error"
+        class="text-red-600"
+        name="country"
+      />
     </div>
     <div class="mb-3">
       <label class="inline-block mb-2">Role</label>
       <VeeField
+        data-test="role-input"
         as="select"
         name="role"
         class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
@@ -113,6 +133,7 @@
     <div class="mb-3 pl-6">
       <!-- Be default VeeField has undefined as value, must specify value="1" otherwise the rules will be broken -->
       <VeeField
+        data-test="tos-input"
         name="tos"
         value="1"
         type="checkbox"
@@ -124,7 +145,11 @@
       <i18n-t keypath="register.accept" tag="label" class="inline-block">
         <a href="/">{{ $t("register.TOS") }}</a>
       </i18n-t>
-      <ErrorMessage class="text-red-600 block" name="tos" />
+      <ErrorMessage
+        data-test="tos-error"
+        class="text-red-600 block"
+        name="tos"
+      />
     </div>
     <button
       :disabled="registerInProgress"
