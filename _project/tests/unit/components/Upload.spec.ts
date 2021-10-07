@@ -106,7 +106,7 @@ describe("SongItem.vue", () => {
     await router.isReady();
 
     const songBase64 = fs.readFileSync(
-      path.join(__dirname, "..", "__mocks__", "SEJODIOTO.mp3")
+      path.join(__dirname, "..", "__mocks__", "TEST.mp3")
     );
     const songBlob = new Blob((songBase64 as any) as BlobPart[]);
     const mockFile = new File([songBlob], "test.mp3", {

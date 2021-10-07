@@ -7,6 +7,7 @@
       <!-- Play/Pause Button -->
       <div class="float-left w-7 h-7 leading-3">
         <button
+          data-test="play-button"
           type="button"
           @click.prevent="toggleAudio"
           id="player-play-button"
@@ -25,7 +26,7 @@
       <div
         class="float-left w-7 h-7 leading-3 text-gray-400 mt-0 text-lg w-14 ml-5 mt-1"
       >
-        <span class="player-currenttime">{{ seek }}</span>
+        <span data-test="seek" class="player-currenttime">{{ seek }}</span>
       </div>
 
       <!-- Scrub -->
@@ -40,6 +41,7 @@
           >
         </div>
         <span
+          data-test="scrub-progress"
           @click.prevent="updateSeek"
           class="block w-full h-2 rounded m-1 mt-2 bg-gray-200 relative cursor-pointer"
         >
@@ -50,6 +52,7 @@
             <i class="fas fa-circle"></i>
           </span>
           <span
+            data-test="progress-inner"
             class="block h-2 rounded bg-gradient-to-r from-green-500 to-green-400"
             :style="{ width: playerProgress }"
           ></span>
@@ -60,7 +63,7 @@
       <div
         class="float-left w-7 h-7 leading-3 text-gray-400 mt-0 text-lg w-14 ml-8 mt-1"
       >
-        <span class="player-duration">{{ duration }}</span>
+        <span data-test="duration" class="player-duration">{{ duration }}</span>
       </div>
     </div>
   </div>
@@ -75,12 +78,12 @@ export default defineComponent({
 
   setup() {
     // Provide & Inject
-    const myComputed = inject<Ref<number>>("myComputed")!;
-    onMounted(() => {
-      setTimeout(() => {
-        myComputed.value = 2;
-      }, 5000);
-    });
+    // const myComputed = inject<Ref<number>>("myComputed")!;
+    // onMounted(() => {
+    //   setTimeout(() => {
+    //     myComputed.value = 2;
+    //   }, 5000);
+    // });
 
     return { ...usePlayer() };
   },

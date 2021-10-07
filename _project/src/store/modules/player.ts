@@ -8,8 +8,8 @@ import { formatTime } from "@/includes/helpers";
 export const state: () => PlayerState = () => ({
   currentSong: null,
   sound: null,
-  seek: "0:00",
-  duration: "0:00",
+  seek: "00:00",
+  duration: "00:00",
   playerProgress: "0%",
 });
 
@@ -83,6 +83,7 @@ const actions = {
       width: elementWidth,
     } = (evt.currentTarget as HTMLSpanElement).getBoundingClientRect(); // currentTarget always returns the element that the event listener attached on
     const newProgress = (clickX - elementLeft) / elementWidth;
+
     const newSeconds = state.sound.duration() * newProgress;
 
     // Update the seek
